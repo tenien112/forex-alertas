@@ -1,0 +1,32 @@
+name: Vigilante FOREX
+
+on:
+  schedule:
+    # Cada hora en el minuto 16 (UTC). De domingo a viernes en UTC para cubrir
+    # de lunes 00:00 a viernes 23:59 en hora de Madrid; el script descarta el finde.
+    - cron: "16 * * * 0-5"
+  workflow_dispatch:
+    inputs:
+      prueba:
+        description: "Enviar aviso de prueba con el estado actual"
+        type: boolean
+        default: false
+
+jobs:
+  vigilar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Ejecutar vigilante
+        run: |
+          if [ "${{ github.event.inputs.prueba }}" = "true" ]; then
+            python alertas_forex.py --prueba || (sleep 30 && python alertas_forex.py --prueba)
+          else
+            python alertas_forex.py || (sleep 30 && python alertas_forex.py)
+          fi
