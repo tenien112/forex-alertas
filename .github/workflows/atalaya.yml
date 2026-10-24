@@ -1,0 +1,31 @@
+name: Vigilante ATALAYA
+
+on:
+  schedule:
+    # 6:43 y 7:43 UTC = 8:43 en Madrid en verano o en invierno; el script solo avisa si en Madrid son las 8
+    - cron: "43 6 * * *"
+    - cron: "43 7 * * *"
+  workflow_dispatch:
+    inputs:
+      prueba:
+        description: "Enviar aviso de prueba ahora"
+        type: boolean
+        default: false
+
+jobs:
+  vigilar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Ejecutar vigilante ATALAYA
+        run: |
+          if [ "${{ github.event.inputs.prueba }}" = "true" ]; then
+            python atalaya.py --prueba || (sleep 30 && python atalaya.py --prueba)
+          else
+            python atalaya.py || (sleep 30 && python atalaya.py)
+          fi
