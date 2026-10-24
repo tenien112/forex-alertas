@@ -133,15 +133,24 @@ def main():
     if not prueba and ahora.hour != 8:
         print(f"Son las {ahora:%H:%M} en Madrid: solo se avisa a las 8. Nada que hacer."); return
     res = calcular(cargar())[:3]
-    lineas = []; riesgo = False
-    for d in res:
-        pt, tx = d["patera"][0], d["taxi"][0]
+    HORAS = ["00-06", "06-12", "12-18", "18-24"]
+    f = lambda v: "–" if v is None else f"{v} %"
+    bloques = []; riesgo = False
+    for n, d in enumerate(res):
+        pt, frp = d["patera"]; tx, frt = d["taxi"]
         if (pt or 0) > UMBRAL or (tx or 0) > UMBRAL: riesgo = True
-        lineas.append(f"{fecha_txt(d['fecha'])}: patera {pt} % | taxi {tx} %")
+        cab = ("HOY " if n == 0 else "MAÑANA " if n == 1 else "") + fecha_txt(d["fecha"]).upper()
+        lin_ = [cab]
+        for i, (nom, _) in enumerate(FRANJAS):
+            lin_.append(f"{nom} {HORAS[i]}: patera {f(frp[i])} | taxi {f(frt[i])}")
+        lin_.append(f"TOTAL DÍA: patera {f(pt)} | taxi {f(tx)}")
+        bloques.append("\n".join(lin_))
+    cuerpo = "\n\n".join(bloques)
     if riesgo:
-        titulo, prio, cuerpo = "ATALAYA: POSIBLE LLEGADA", "high", "⚠️ Probabilidad alta (más del 70 %):\n" + "\n".join(lineas)
+        titulo, prio = "ATALAYA: POSIBLE LLEGADA", "high"
+        cuerpo = "⚠️ Probabilidad alta (más del 70 %)\n\n" + cuerpo
     else:
-        titulo, prio, cuerpo = "ATALAYA: sin riesgo relevante", "default", "\n".join(lineas)
+        titulo, prio = "ATALAYA: sin riesgo relevante", "default"
     print(titulo); print(cuerpo)
     requests.post(f"https://ntfy.sh/{TEMA}", data=cuerpo.encode("utf-8"),
                   headers={"Title": titulo, "Priority": prio, "Tags": "ocean"}, timeout=15)
