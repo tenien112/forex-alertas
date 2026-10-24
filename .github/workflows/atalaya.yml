@@ -2,9 +2,9 @@ name: Vigilante ATALAYA
 
 on:
   schedule:
-    # 6:43 y 7:43 UTC = 8:43 en Madrid en verano o en invierno; el script solo avisa si en Madrid son las 8
-    - cron: "43 6 * * *"
-    - cron: "43 7 * * *"
+    # 5:58 y 6:58 UTC = 7:58 en Madrid (verano o invierno); el script solo avisa entre 7:50 y 8:40 de Madrid
+    - cron: "58 5 * * *"
+    - cron: "58 6 * * *"
   workflow_dispatch:
     inputs:
       prueba:

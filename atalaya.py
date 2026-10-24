@@ -130,7 +130,8 @@ def fecha_txt(f):
 def main():
     prueba = "--prueba" in sys.argv
     ahora = dt.datetime.now(ZoneInfo("Europe/Madrid"))
-    if not prueba and ahora.hour != 8:
+    minutos = ahora.hour * 60 + ahora.minute
+    if not prueba and not (7*60 + 50 <= minutos < 8*60 + 40):
         print(f"Son las {ahora:%H:%M} en Madrid: solo se avisa a las 8. Nada que hacer."); return
     res = calcular(cargar())[:3]
     HORAS = ["00-06", "06-12", "12-18", "18-24"]
@@ -140,12 +141,15 @@ def main():
         pt, frp = d["patera"]; tx, frt = d["taxi"]
         if (pt or 0) > UMBRAL or (tx or 0) > UMBRAL: riesgo = True
         cab = ("HOY " if n == 0 else "MAÑANA " if n == 1 else "") + fecha_txt(d["fecha"]).upper()
-        lin_ = [cab]
-        for i, (nom, _) in enumerate(FRANJAS):
-            lin_.append(f"{nom} {HORAS[i]}: patera {f(frp[i])} | taxi {f(frt[i])}")
-        lin_.append(f"TOTAL DÍA: patera {f(pt)} | taxi {f(tx)}")
+        if n == 0:
+            lin_ = [cab]
+            for i, (nom, _) in enumerate(FRANJAS):
+                lin_.append(f"{nom} {HORAS[i]}: patera {f(frp[i])} | taxi {f(frt[i])}")
+            lin_.append(f"TOTAL DÍA: patera {f(pt)} | taxi {f(tx)}")
+        else:
+            lin_ = [f"{cab}: patera {f(pt)} | taxi {f(tx)}"]
         bloques.append("\n".join(lin_))
-    cuerpo = "\n\n".join(bloques)
+    cuerpo = bloques[0] + "\n\n" + "\n".join(bloques[1:])
     if riesgo:
         titulo, prio = "ATALAYA: POSIBLE LLEGADA", "high"
         cuerpo = "⚠️ Probabilidad alta (más del 70 %)\n\n" + cuerpo
