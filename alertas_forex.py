@@ -51,7 +51,7 @@ def main():
     if madrid.weekday() >= 5 and "--prueba" not in sys.argv:
         print("Fin de semana (hora de Madrid): no se vigila."); return
     T = ahora.floor("30min")              # último cierre de M30
-    P = T - pd.Timedelta(hours=1)         # situación hace 1 hora
+    P = T - pd.Timedelta(minutes=30)      # situación hace media hora (se ejecuta cada 30 min)
     datos = {}
     for par in PARES:
         t = PARES[par]

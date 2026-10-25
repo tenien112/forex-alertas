@@ -1,16 +1,27 @@
 name: Vigilante FOREX
 
+# Un solo trabajo cada 30 minutos que revisa el FOREX y además el ORO y la PLATA
+# (juntos para gastar la mitad de minutos gratuitos de GitHub).
 on:
   schedule:
-    # Cada hora en el minuto 16 (UTC). De domingo a viernes en UTC para cubrir
-    # de lunes 00:00 a viernes 23:59 en hora de Madrid; el script descarta el finde.
-    - cron: "16 * * * 0-5"
+    # Cada 30 minutos (minutos 3 y 33 UTC), de domingo a viernes UTC.
+    # El FOREX solo se vigila de lunes a viernes (hora de Madrid); el oro abre el domingo noche.
+    - cron: "3,33 * * * 0-5"
+    # Resumen diario ORO y PLATA de lunes a viernes, sobre las 9 de Madrid
+    - cron: "45 7 * * 1-5"
   workflow_dispatch:
     inputs:
       prueba:
-        description: "Enviar aviso de prueba con el estado actual"
+        description: "Enviar aviso de prueba con el estado actual del FOREX"
         type: boolean
         default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vigilante
+  cancel-in-progress: false
 
 jobs:
   vigilar:
@@ -23,10 +34,30 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Ejecutar vigilante
+      - name: Ejecutar vigilante FOREX
+        if: github.event.schedule != '45 7 * * 1-5'
         run: |
           if [ "${{ github.event.inputs.prueba }}" = "true" ]; then
             python alertas_forex.py --prueba || (sleep 30 && python alertas_forex.py --prueba)
           else
             python alertas_forex.py || (sleep 30 && python alertas_forex.py)
+          fi
+      - name: Ejecutar vigilante ORO y PLATA
+        if: github.event_name == 'schedule'
+        continue-on-error: true
+        run: |
+          if [ "${{ github.event.schedule }}" = "45 7 * * 1-5" ]; then
+            python vigilante_oro.py --resumen || (sleep 30 && python vigilante_oro.py --resumen)
+          else
+            python vigilante_oro.py || (sleep 30 && python vigilante_oro.py)
+          fi
+      - name: Guardar hora del último aviso
+        if: always()
+        run: |
+          if [ -n "$(git status --porcelain estado_oro.json)" ]; then
+            git config user.name "vigilante-oro"
+            git config user.email "vigilante-oro@users.noreply.github.com"
+            git add estado_oro.json
+            git commit -m "Vigilante ORO: último aviso"
+            git pull --rebase origin main && git push origin HEAD:main
           fi
