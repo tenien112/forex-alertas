@@ -1,5 +1,5 @@
 """
-VIGILANTE BOT COMPRA-VENTA ORO, PLATA, BITCOIN Y OIL by Lorenzo
+VIGILANTE BOT COMPRAVENTA by Lorenzo
 Réplica en Python del cBot CLAUDE-VIGILANTE-MULTI-TF-BOT con la configuración
 que salió positiva en el oro:
   - 4 temporalidades: M30, H1, H2, H4 (los 4 indicadores de siempre)
@@ -156,7 +156,7 @@ def mensaje(mercado, ev):
                   f"{'Ganas' if dif >= 0 else 'Pierdes'} unos {fmt(abs(dif), mercado)} por unidad\n"
                   f"(Señal de las {hora(ev['t'])})")
         prio, tag = "urgent", "bell"
-    return f"VIGILANTE BOT COMPRA-VENTA ORO, PLATA, BITCOIN Y OIL: {ev['tipo']} {mercado}", cuerpo, prio, tag
+    return f"VIGILANTE BOT COMPRAVENTA: {ev['tipo']} {mercado}", cuerpo, prio, tag
 
 
 def enviar(titulo, cuerpo, prio="high", tag="chart_with_upwards_trend"):
@@ -208,10 +208,10 @@ def main():
 
     print("\n".join(resumen))
     if prueba:
-        enviar("VIGILANTE BOT COMPRA-VENTA ORO, PLATA, BITCOIN Y OIL: estado actual", "\n\n".join(resumen),
+        enviar("VIGILANTE BOT COMPRAVENTA: estado actual", "\n\n".join(resumen),
                "default", "white_check_mark")
     elif "--resumen" in sys.argv:
-        enviar("VIGILANTE BOT COMPRA-VENTA ORO, PLATA, BITCOIN Y OIL: resumen diario", "\n\n".join(resumen),
+        enviar("VIGILANTE BOT COMPRAVENTA: resumen diario", "\n\n".join(resumen),
                "default", "sunrise")
 
     json.dump(estado, open(ESTADO, "w", encoding="utf-8"), indent=1)

@@ -1,4 +1,4 @@
-name: Vigilante BOT COMPRA-VENTA ORO, PLATA, BITCOIN Y OIL
+name: Vigilante BOT COMPRAVENTA
 
 on:
   # Solo prueba manual: la vigilancia programada va dentro de vigilante.yml
