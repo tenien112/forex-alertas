@@ -203,6 +203,9 @@ def main():
     if prueba:
         enviar("ORO y PLATA: estado actual", "Vigilante ORO y PLATA funcionando.\n" + "\n".join(resumen),
                "default", "white_check_mark")
+    elif "--resumen" in sys.argv:
+        enviar("Resumen diario ORO y PLATA", "Vigilante ORO y PLATA funcionando.\n" + "\n".join(resumen),
+               "default", "sunrise")
 
     json.dump(estado, open(ESTADO, "w", encoding="utf-8"), indent=1)
 

@@ -5,6 +5,8 @@ on:
     # Cada 30 minutos (minutos 3 y 33 UTC), de domingo a viernes UTC:
     # el oro abre el domingo por la noche y cierra el viernes por la noche.
     - cron: "3,33 * * * 0-5"
+    # Resumen diario de lunes a viernes, sobre las 9 de Madrid (7:45 UTC = 8:45 en invierno, 9:45 en verano)
+    - cron: "45 7 * * 1-5"
   workflow_dispatch:
     inputs:
       prueba:
@@ -34,6 +36,8 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.prueba }}" = "true" ]; then
             python vigilante_oro.py --prueba || (sleep 30 && python vigilante_oro.py --prueba)
+          elif [ "${{ github.event.schedule }}" = "45 7 * * 1-5" ]; then
+            python vigilante_oro.py --resumen || (sleep 30 && python vigilante_oro.py --resumen)
           else
             python vigilante_oro.py || (sleep 30 && python vigilante_oro.py)
           fi

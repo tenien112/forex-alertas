@@ -12,4 +12,4 @@ Cada día a las 8:43 (Madrid) calcula con el mismo algoritmo que la app ATALAYA 
 
 Cada 30 minutos (domingo noche a viernes noche) replica el cBot CLAUDE-VIGILANTE-MULTI-TF-BOT con la configuración del oro (M30, H1, H2, H4; salida con M30; solo alineación nueva) sobre ORO (GC=F) y PLATA (SI=F) y avisa por ntfy (tema forex-lorenzito-7k3q9) de cada COMPRA, VENTA y CIERRE para operarlas a mano en XTB. No depende de cTrader. Guarda en estado_oro.json la hora del último aviso para no repetir.
 
-Prueba manual: pestaña Actions → Vigilante ORO y PLATA → Run workflow → marcar 'prueba'.
+Resumen diario de lunes a viernes sobre las 9 (Madrid). Prueba manual: pestaña Actions → Vigilante ORO y PLATA → Run workflow → marcar 'prueba'.
