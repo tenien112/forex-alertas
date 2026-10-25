@@ -137,21 +137,25 @@ def fmt(p, mercado):
 
 def mensaje(mercado, ev):
     p = fmt(ev["precio"], mercado)
-    if ev["tipo"] in ("COMPRA", "VENDE"):
-        icono = "🟢" if ev["tipo"] == "COMPRA" else "🔴"
-        cuerpo = (f"{icono} {ev['tipo']} {mercado}\n"
-                  f"Señal: {hora(ev['t'])} · precio ref. {p}\n"
-                  f"Temporalidades: {txt_est(ev['est'])}")
-        prio, tag = "urgent", ("green_circle" if ev["tipo"] == "COMPRA" else "red_circle")
+    if ev["tipo"] == "COMPRA":
+        cuerpo = (f"🟢 COMPRA {mercado} ahora.\n"
+                  f"Precio aproximado: {p}\n"
+                  f"(Señal de las {hora(ev['t'])})")
+        prio, tag = "urgent", "green_circle"
+    elif ev["tipo"] == "VENDE":
+        cuerpo = (f"🔴 VENDE {mercado} ahora.\n"
+                  f"Precio aproximado: {p}\n"
+                  f"(Señal de las {hora(ev['t'])})")
+        prio, tag = "urgent", "red_circle"
     else:
         t0, p0 = ev["entrada"]
         dif = ev["precio"] - p0 if ev["tipo"] == "CIERRA COMPRA" else p0 - ev["precio"]
-        cuerpo = (f"🔔 {ev['tipo'].capitalize()} de {mercado}\n"
-                  f"Señal: {hora(ev['t'])} · precio ref. {p}\n"
-                  f"Entrada: {hora(t0)} a {fmt(p0, mercado)} · resultado aprox. {'+' if dif >= 0 else ''}{fmt(dif, mercado)}\n"
-                  f"Temporalidades: {txt_est(ev['est'])}")
+        que = "COMPRA" if ev["tipo"] == "CIERRA COMPRA" else "VENTA"
+        cuerpo = (f"🔔 CIERRA ahora la {que} de {mercado}.\n"
+                  f"Precio aproximado: {p}\n"
+                  f"{'Ganas' if dif >= 0 else 'Pierdes'} unos {fmt(abs(dif), mercado)} por unidad\n"
+                  f"(Señal de las {hora(ev['t'])})")
         prio, tag = "urgent", "bell"
-    cuerpo += "\n(Precio de referencia del futuro; en XTB puede variar unos puntos)"
     return f"{ev['tipo']} {mercado}", cuerpo, prio, tag
 
 
@@ -191,20 +195,23 @@ def main():
             estado[mercado] = eventos[-1]["t"].isoformat()
 
         if ult:
+            g = 1 if all(x == 1 for x in ult["est"]) else -1 if all(x == -1 for x in ult["est"]) else 0
+            tend = "sube ⬆️" if g == 1 else "baja ⬇️" if g == -1 else "sin dirección clara"
             if ult["pos"] == 0:
-                p = "FUERA (sin operación)"
+                linea = f"{mercado}: {tend}. No hay nada abierto. Espera el próximo aviso."
             else:
                 t0, p0 = ult["entrada"]
-                p = f"operación abierta: {'COMPRA' if ult['pos'] == 1 else 'VENTA'} desde {hora(t0)} a {fmt(p0, mercado)}"
-            ultima = f"{eventos[-1]['tipo']} {hora(eventos[-1]['t'])}" if eventos else "ninguna"
-            resumen.append(f"{mercado}: {txt_est(ult['est'])} · {p} · última señal: {ultima} · vela {hora(ult['t'])}")
+                que = "COMPRA" if ult["pos"] == 1 else "VENTA"
+                linea = (f"{mercado}: {tend}. El sistema está en {que} desde el {hora(t0)} a {fmt(p0, mercado)}. "
+                         f"Si no entraste, no entres ahora: espera al próximo aviso.")
+            resumen.append(linea)
 
     print("\n".join(resumen))
     if prueba:
-        enviar("ORO y PLATA: estado actual", "Vigilante ORO y PLATA funcionando.\n" + "\n".join(resumen),
+        enviar("ORO y PLATA: estado actual", "\n\n".join(resumen),
                "default", "white_check_mark")
     elif "--resumen" in sys.argv:
-        enviar("Resumen diario ORO y PLATA", "Vigilante ORO y PLATA funcionando.\n" + "\n".join(resumen),
+        enviar("Resumen diario ORO y PLATA", "\n\n".join(resumen),
                "default", "sunrise")
 
     json.dump(estado, open(ESTADO, "w", encoding="utf-8"), indent=1)
