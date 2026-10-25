@@ -1,5 +1,5 @@
 """
-VIGILANTE ORO, PLATA, BITCOIN y PETRÓLEO by Lorenzo
+VIGILANTE ORO, PLATA, BITCOIN y PETRÓLEO WTI by Lorenzo
 Réplica en Python del cBot CLAUDE-VIGILANTE-MULTI-TF-BOT con la configuración
 que salió positiva en el oro:
   - 4 temporalidades: M30, H1, H2, H4 (los 4 indicadores de siempre)
@@ -17,7 +17,7 @@ que todavía no se hayan avisado. Solo guarda la hora del último aviso enviado
 import sys, json, os
 import numpy as np, pandas as pd, yfinance as yf, requests
 
-MERCADOS = {"ORO": "GC=F", "PLATA": "SI=F", "BITCOIN": "BTC-USD", "PETRÓLEO": "CL=F"}
+MERCADOS = {"ORO": "GC=F", "PLATA": "SI=F", "BITCOIN": "BTC-USD", "PETRÓLEO WTI": "CL=F"}
 TEMA = "forex-lorenzito-7k3q9"
 BF, BS, BG, NL = 12, 26, 9, 5          # MACD cascada
 EB, EC = 18, 5                         # EMA cascada
@@ -208,10 +208,10 @@ def main():
 
     print("\n".join(resumen))
     if prueba:
-        enviar("ORO, PLATA, BITCOIN y PETRÓLEO: estado actual", "\n\n".join(resumen),
+        enviar("ORO, PLATA, BITCOIN y PETRÓLEO WTI: estado actual", "\n\n".join(resumen),
                "default", "white_check_mark")
     elif "--resumen" in sys.argv:
-        enviar("Resumen diario ORO, PLATA, BITCOIN y PETRÓLEO", "\n\n".join(resumen),
+        enviar("Resumen diario ORO, PLATA, BITCOIN y PETRÓLEO WTI", "\n\n".join(resumen),
                "default", "sunrise")
 
     json.dump(estado, open(ESTADO, "w", encoding="utf-8"), indent=1)
