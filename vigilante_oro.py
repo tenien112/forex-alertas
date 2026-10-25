@@ -4,13 +4,13 @@ Réplica en Python del cBot CLAUDE-VIGILANTE-MULTI-TF-BOT con la configuración
 que salió positiva en el oro:
   - 4 temporalidades: M30, H1, H2, H4 (los 4 indicadores de siempre)
   - ENTRADA: COMPRA cuando las 4 se alinean positivas por primera vez
-             (alineación nueva); VENTA cuando se alinean negativas.
+             (alineación nueva); VENDE cuando se alinean negativas.
   - SALIDA:  con 1 temporalidad (M30): cierra cuando M30 deja de cumplir,
              o si la alineación global se da la vuelta.
   - Sin SL, sin TP, sin filtro EMA, sin trailing.
 
 No guarda posiciones: en cada ejecución vuelve a simular el sistema vela a vela
-sobre los últimos días y avisa de las señales nuevas (COMPRA / VENTA / CIERRE)
+sobre los últimos días y avisa de las señales nuevas (COMPRA / VENDE / CIERRA)
 que todavía no se hayan avisado. Solo guarda la hora del último aviso enviado
 (estado_oro.json) para no repetir.
 """
@@ -118,7 +118,7 @@ def simular(series):
             eventos.append({"t": t, "tipo": "COMPRA", "precio": precio, "est": est})
         elif glob == -1 and pos == 0 and nueva_baj:
             pos = -1; entrada = (t, precio)
-            eventos.append({"t": t, "tipo": "VENTA", "precio": precio, "est": est})
+            eventos.append({"t": t, "tipo": "VENDE", "precio": precio, "est": est})
         ult = {"t": t, "est": est, "pos": pos, "entrada": entrada, "precio": precio}
     return eventos, ult
 
@@ -137,9 +137,9 @@ def fmt(p, mercado):
 
 def mensaje(mercado, ev):
     p = fmt(ev["precio"], mercado)
-    if ev["tipo"] in ("COMPRA", "VENTA"):
+    if ev["tipo"] in ("COMPRA", "VENDE"):
         icono = "🟢" if ev["tipo"] == "COMPRA" else "🔴"
-        cuerpo = (f"{icono} Abre {ev['tipo']} en {mercado}\n"
+        cuerpo = (f"{icono} {ev['tipo']} {mercado}\n"
                   f"Señal: {hora(ev['t'])} · precio ref. {p}\n"
                   f"Temporalidades: {txt_est(ev['est'])}")
         prio, tag = "urgent", ("green_circle" if ev["tipo"] == "COMPRA" else "red_circle")
@@ -195,7 +195,7 @@ def main():
                 p = "FUERA (sin operación)"
             else:
                 t0, p0 = ult["entrada"]
-                p = f"{'COMPRADO' if ult['pos'] == 1 else 'VENDIDO'} desde {hora(t0)} a {fmt(p0, mercado)}"
+                p = f"operación abierta: {'COMPRA' if ult['pos'] == 1 else 'VENTA'} desde {hora(t0)} a {fmt(p0, mercado)}"
             ultima = f"{eventos[-1]['tipo']} {hora(eventos[-1]['t'])}" if eventos else "ninguna"
             resumen.append(f"{mercado}: {txt_est(ult['est'])} · {p} · última señal: {ultima} · vela {hora(ult['t'])}")
 
