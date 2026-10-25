@@ -23,6 +23,8 @@ BF, BS, BG, NL = 12, 26, 9, 5          # MACD cascada
 EB, EC = 18, 5                         # EMA cascada
 INVERTIR = False
 TFS = [("M30", 30), ("H1", 60), ("H2", 120), ("H4", 240)]
+# Mercados con temporalidades propias (el petróleo va mejor un escalón más lento: probado 1 año en H1-H8)
+TFS_MERCADO = {"PETRÓLEO WTI": [("H1", 60), ("H2", 120), ("H4", 240), ("H8", 480)]}
 TF_SALIDA = 1                          # salir con las N temporalidades más pequeñas (modo Todas)
 DIAS_SIM = 25                          # días de M30 que se re-simulan en cada ejecución
 VENTANA_H = 8                          # se avisan señales de como mucho hace 8 h (por retrasos de GitHub)
@@ -71,23 +73,25 @@ def descargar(ticker, ahora):
     m30 = m30[m30.index + pd.Timedelta(minutes=30) <= ahora]
     h1 = h1[h1.index + pd.Timedelta(minutes=60) <= ahora]
     series = {"M30": m30, "H1": h1}
-    for nombre, mins in (("H2", 120), ("H4", 240)):
+    for nombre, mins in (("H2", 120), ("H4", 240), ("H8", 480)):
         s = h1.resample(f"{mins}min", origin="epoch", label="left", closed="left").last().dropna()
         series[nombre] = s[s.index + pd.Timedelta(minutes=mins) <= ahora]
     return series
 
 
-def simular(series):
+def simular(series, tfs=None):
+    tfs = tfs or TFS
     """Simula el sistema sobre las velas M30 de los últimos DIAS_SIM días.
     Devuelve (eventos, estado_final)."""
     tablas = []
-    for nombre, mins in TFS:
+    for nombre, mins in tfs:
         s = series[nombre]
         cierre = (s.index + pd.Timedelta(minutes=mins)).values
         tablas.append((nombre, cierre, estados_serie(s.values)))
 
-    m30 = series["M30"]
-    tiempos = m30.index + pd.Timedelta(minutes=30)            # momento de cierre de cada vela M30
+    base, bmins = tfs[0]                                      # la temporalidad más pequeña marca el ritmo
+    m30 = series[base]
+    tiempos = m30.index + pd.Timedelta(minutes=bmins)         # momento de cierre de cada vela base
     precios = m30.values
     inicio = tiempos[-1] - pd.Timedelta(days=DIAS_SIM)
 
@@ -181,7 +185,7 @@ def main():
         series = descargar(ticker, ahora)
         if series is None:
             print(f"Sin datos para {mercado}"); continue
-        eventos, ult = simular(series)
+        eventos, ult = simular(series, TFS_MERCADO.get(mercado, TFS))
 
         # Último aviso enviado; la primera vez solo se avisa de lo de la última hora
         ultimo = pd.Timestamp(estado[mercado]) if mercado in estado else ahora - pd.Timedelta(hours=1)
