@@ -103,10 +103,10 @@ def main():
     for titulo, msg in avisos:
         print("AVISO:", titulo, "-", msg)
         requests.post(f"https://ntfy.sh/{TEMA}", data=msg.encode("utf-8"),
-                      headers={"Title": ("VIGILANTE INFORMACIÓN TENDENCIAS: " + titulo).encode("utf-8"), "Priority": "high", "Tags": "chart_with_upwards_trend"}, timeout=15)
+                      headers={"Title": ("VIGILANTE RADAR CAMBIO TENDENCIAS: " + titulo).encode("utf-8"), "Priority": "high", "Tags": "chart_with_upwards_trend"}, timeout=15)
     if enviar:
         requests.post(f"https://ntfy.sh/{TEMA}", data=("Prueba OK. Estado actual:\n" + "\n".join(resumen)).encode("utf-8"),
-                      headers={"Title": "VIGILANTE INFORMACIÓN TENDENCIAS: funcionando".encode("utf-8"), "Priority": "default"}, timeout=15)
+                      headers={"Title": "VIGILANTE RADAR CAMBIO TENDENCIAS: funcionando".encode("utf-8"), "Priority": "default"}, timeout=15)
     if not avisos: print("Sin cambios: no se envía aviso.")
 
 if __name__ == "__main__":
