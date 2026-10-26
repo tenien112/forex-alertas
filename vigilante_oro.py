@@ -205,7 +205,6 @@ def main():
         estado = {}
 
     resumen = []
-    parados = []
     for mercado, ticker in MERCADOS.items():
         series = descargar(ticker, ahora)
         if series is None:
@@ -225,26 +224,31 @@ def main():
 
         if ult:
             g = 1 if all(x == 1 for x in ult["est"]) else -1 if all(x == -1 for x in ult["est"]) else 0
-            tend = "sube ⬆️" if g == 1 else "baja ⬇️" if g == -1 else "sin dirección"
+            tend = "sube ⬆️" if g == 1 else "baja ⬇️" if g == -1 else "sin dirección clara"
             if ult["pos"] == 0:
-                parados.append(f"{mercado}: {tend} · nada abierto")
+                linea = f"{mercado}: {tend}. No hay nada abierto. Espera el próximo aviso."
             else:
                 t0, p0 = ult["entrada"]
                 que = "LARGO" if ult["pos"] == 1 else "CORTO"
-                resumen.append(f"{mercado}: {tend} · en {que} desde {hora(t0)} a {fmt(p0, mercado)}")
+                linea = (f"{mercado}: {tend}. El sistema está en {que} desde el {hora(t0)} a {fmt(p0, mercado)}. "
+                         f"Si no entraste, no entres ahora: espera al próximo aviso.")
+            resumen.append(linea)
 
-    texto = ""
-    if resumen:
-        texto += "📌 ABIERTAS (si no entraste, no entres ahora):\n" + "\n".join(resumen) + "\n\n"
-    if parados:
-        texto += "⏸️ SIN NADA ABIERTO (espera el próximo aviso):\n" + "\n".join(parados)
-    texto = texto.strip()
-    print(texto)
+    bloques = list(resumen)
+    print("\n".join(bloques))
     if prueba or "--resumen" in sys.argv:
-        open("resumen_oro.txt", "w", encoding="utf-8").write(texto + "\n")
+        open("resumen_oro.txt", "w", encoding="utf-8").write("\n\n".join(bloques) + "\n")
+
+    # Dos mitades; se manda primero la 2/2 para que en el móvil quede arriba la 1/2
+    mitad = (len(bloques) + 1) // 2
+    partes = [p for p in ("\n\n".join(bloques[:mitad]), "\n\n".join(bloques[mitad:])) if p]
 
     def mandar(titulo, prio, tag):
-        enviar(titulo, texto, prio, tag)
+        n = len(partes)
+        for i in range(n, 0, -1):
+            sufijo = f" ({i}/{n})" if n > 1 else ""
+            enviar(titulo + sufijo, partes[i - 1], prio, tag)
+            time.sleep(2)
 
     if prueba:
         mandar("VIGILANTE BOT COMPRAVENTA: estado actual", "default", "white_check_mark")
