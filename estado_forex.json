@@ -17,5 +17,6 @@
  "USD/CHF": 0,
  "EUR/CHF": 0,
  "GBP/CHF": 1,
- "BITCOIN": -1
+ "BITCOIN": -1,
+ "PLATA": -1
 }
