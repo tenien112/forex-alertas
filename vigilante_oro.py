@@ -205,7 +205,6 @@ def main():
         estado = {}
 
     resumen = []
-    parados = {}
     for mercado, ticker in MERCADOS.items():
         series = descargar(ticker, ahora)
         if series is None:
@@ -227,17 +226,15 @@ def main():
             g = 1 if all(x == 1 for x in ult["est"]) else -1 if all(x == -1 for x in ult["est"]) else 0
             tend = "sube ⬆️" if g == 1 else "baja ⬇️" if g == -1 else "sin dirección clara"
             if ult["pos"] == 0:
-                parados.setdefault(tend, []).append(mercado)
+                linea = f"{mercado}: {tend}. No hay nada abierto. Espera el próximo aviso."
             else:
                 t0, p0 = ult["entrada"]
                 que = "LARGO" if ult["pos"] == 1 else "CORTO"
-                resumen.append(f"{mercado}: {tend}. En {que} desde el {hora(t0)} a {fmt(p0, mercado)}.")
+                linea = (f"{mercado}: {tend}. El sistema está en {que} desde el {hora(t0)} a {fmt(p0, mercado)}. "
+                         f"Si no entraste, no entres ahora: espera al próximo aviso.")
+            resumen.append(linea)
 
     bloques = list(resumen)
-    if resumen:
-        bloques.append("(Si no entraste en alguna, no entres ahora: espera al próximo aviso.)")
-    for tend, lista in parados.items():
-        bloques.append(f"Nada abierto, {tend}: " + ", ".join(lista) + ".")
     print("\n".join(bloques))
 
     # Trocear para que el móvil no corte el mensaje
