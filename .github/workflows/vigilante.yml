@@ -43,7 +43,8 @@ jobs:
             python alertas_forex.py || (sleep 30 && python alertas_forex.py)
           fi
       - name: Ejecutar vigilante ORO y PLATA
-        if: github.event_name == 'schedule'
+        # También cuando lo lanza el despertador externo (cron-job.org) sin modo prueba
+        if: github.event_name == 'schedule' || github.event.inputs.prueba != 'true'
         continue-on-error: true
         run: |
           if [ "${{ github.event.schedule }}" = "45 7 * * 1-5" ]; then
