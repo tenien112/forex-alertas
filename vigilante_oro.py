@@ -21,8 +21,11 @@ MERCADOS = {"ORO": "GC=F", "PLATA": "SI=F", "BITCOIN": "BTC-USD", "PETRÓLEO WTI
             "EUR/USD": "EURUSD=X", "EUR/GBP": "EURGBP=X", "EUR/JPY": "EURJPY=X",
             "GBP/USD": "GBPUSD=X", "USD/CNH": "USDCNH=X", "USD/CHF": "USDCHF=X",
             "GBP/CHF": "GBPCHF=X", "EUR/CHF": "EURCHF=X",
-            "USD/JPY": "USDJPY=X"}
-FOREX = {"EUR/USD", "EUR/GBP", "EUR/JPY", "GBP/USD", "USD/CNH", "USD/CHF", "GBP/CHF", "EUR/CHF", "USD/JPY"}
+            "USD/JPY": "USDJPY=X",
+            "EUR/CAD": "EURCAD=X", "EUR/AUD": "EURAUD=X", "GBP/CAD": "GBPCAD=X",
+            "GBP/AUD": "GBPAUD=X", "GBP/JPY": "GBPJPY=X"}
+FOREX = {"EUR/USD", "EUR/GBP", "EUR/JPY", "GBP/USD", "USD/CNH", "USD/CHF", "GBP/CHF", "EUR/CHF", "USD/JPY",
+         "EUR/CAD", "EUR/AUD", "GBP/CAD", "GBP/AUD", "GBP/JPY"}
 TEMA = "forex-lorenzito-7k3q9"
 BF, BS, BG, NL = 12, 26, 9, 5          # MACD cascada
 EB, EC = 18, 5                         # EMA cascada
