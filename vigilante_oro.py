@@ -1,3 +1,4 @@
+import time
 """
 VIGILANTE BOT COMPRAVENTA by Lorenzo
 Réplica en Python del cBot CLAUDE-VIGILANTE-MULTI-TF-BOT con la configuración
@@ -204,6 +205,7 @@ def main():
         estado = {}
 
     resumen = []
+    parados = {}
     for mercado, ticker in MERCADOS.items():
         series = descargar(ticker, ahora)
         if series is None:
@@ -225,21 +227,38 @@ def main():
             g = 1 if all(x == 1 for x in ult["est"]) else -1 if all(x == -1 for x in ult["est"]) else 0
             tend = "sube ⬆️" if g == 1 else "baja ⬇️" if g == -1 else "sin dirección clara"
             if ult["pos"] == 0:
-                linea = f"{mercado}: {tend}. No hay nada abierto. Espera el próximo aviso."
+                parados.setdefault(tend, []).append(mercado)
             else:
                 t0, p0 = ult["entrada"]
                 que = "LARGO" if ult["pos"] == 1 else "CORTO"
-                linea = (f"{mercado}: {tend}. El sistema está en {que} desde el {hora(t0)} a {fmt(p0, mercado)}. "
-                         f"Si no entraste, no entres ahora: espera al próximo aviso.")
-            resumen.append(linea)
+                resumen.append(f"{mercado}: {tend}. En {que} desde el {hora(t0)} a {fmt(p0, mercado)}.")
 
-    print("\n".join(resumen))
+    bloques = list(resumen)
+    if resumen:
+        bloques.append("(Si no entraste en alguna, no entres ahora: espera al próximo aviso.)")
+    for tend, lista in parados.items():
+        bloques.append(f"Nada abierto, {tend}: " + ", ".join(lista) + ".")
+    print("\n".join(bloques))
+
+    # Trocear para que el móvil no corte el mensaje
+    partes, act = [], ""
+    for b in bloques:
+        if act and len(act) + len(b) > 900:
+            partes.append(act); act = ""
+        act = f"{act}\n\n{b}" if act else b
+    if act:
+        partes.append(act)
+
+    def mandar(titulo, prio, tag):
+        for i, parte in enumerate(partes, 1):
+            sufijo = f" ({i}/{len(partes)})" if len(partes) > 1 else ""
+            enviar(titulo + sufijo, parte, prio, tag)
+            time.sleep(1)
+
     if prueba:
-        enviar("VIGILANTE BOT COMPRAVENTA: estado actual", "\n\n".join(resumen),
-               "default", "white_check_mark")
+        mandar("VIGILANTE BOT COMPRAVENTA: estado actual", "default", "white_check_mark")
     elif "--resumen" in sys.argv:
-        enviar("VIGILANTE BOT COMPRAVENTA: resumen diario", "\n\n".join(resumen),
-               "default", "sunrise")
+        mandar("VIGILANTE BOT COMPRAVENTA: resumen diario", "default", "sunrise")
 
     json.dump(estado, open(ESTADO, "w", encoding="utf-8"), indent=1)
 
