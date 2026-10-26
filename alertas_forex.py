@@ -103,8 +103,8 @@ def main():
                                f"⚠️ {bonito(par)} deja de estar {'ALCISTA' if g_prev==1 else 'BAJISTA'}. Falla: " + " | ".join(fallos)))
             if g_now != 0:
                 avisos.append((("ALCISTA " if g_now == 1 else "BAJISTA ") + bonito(par),
-                               f"{'🟢' if g_now==1 else '🔴'} {bonito(par)} {'ALCISTA' if g_now==1 else 'BAJISTA'}: los 4 indicadores "
-                               f"{'positivos' if g_now==1 else 'negativos'} en M30, H1 y H2"))
+                               f"{'🟢' if g_now==1 else '🔴'} {bonito(par)} {'ALCISTA' if g_now==1 else 'BAJISTA'} en las 3 temporalidades "
+                               f"(M30, H1 y H2)"))
 
     print(f"Vela evaluada: {T:%d/%m %H:%M} UTC (comparada con {P:%H:%M})")
     print("\n".join(resumen))
