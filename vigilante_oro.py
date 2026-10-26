@@ -17,7 +17,9 @@ que todavía no se hayan avisado. Solo guarda la hora del último aviso enviado
 import sys, json, os
 import numpy as np, pandas as pd, yfinance as yf, requests
 
-MERCADOS = {"ORO": "GC=F", "PLATA": "SI=F", "BITCOIN": "BTC-USD", "PETRÓLEO WTI": "CL=F"}
+MERCADOS = {"ORO": "GC=F", "PLATA": "SI=F", "BITCOIN": "BTC-USD", "PETRÓLEO WTI": "CL=F",
+            "EUR/USD": "EURUSD=X", "EUR/GBP": "EURGBP=X", "EUR/JPY": "EURJPY=X"}
+FOREX = {"EUR/USD", "EUR/GBP", "EUR/JPY"}
 TEMA = "forex-lorenzito-7k3q9"
 BF, BS, BG, NL = 12, 26, 9, 5          # MACD cascada
 EB, EC = 18, 5                         # EMA cascada
@@ -136,7 +138,17 @@ def hora(t):
 
 
 def fmt(p, mercado):
+    if mercado in FOREX:
+        return f"{p:.3f}" if "JPY" in mercado else f"{p:.5f}"
     return f"{p:.3f}" if mercado == "PLATA" else f"{p:.2f}"
+
+
+def txt_dif(dif, mercado):
+    """Ganancia/pérdida: en pips para el forex, por unidad en el resto."""
+    if mercado in FOREX:
+        pips = abs(dif) * (100 if "JPY" in mercado else 10000)
+        return f"unos {pips:.0f} pips"
+    return f"unos {fmt(abs(dif), mercado)} por unidad"
 
 
 def mensaje(mercado, ev):
@@ -157,7 +169,7 @@ def mensaje(mercado, ev):
         que = "COMPRA" if ev["tipo"] == "CIERRA COMPRA" else "VENTA"
         cuerpo = (f"🔔 CIERRA ahora la {que} de {mercado}.\n"
                   f"Precio aproximado: {p}\n"
-                  f"{'Ganas' if dif >= 0 else 'Pierdes'} unos {fmt(abs(dif), mercado)} por unidad\n"
+                  f"{'Ganas' if dif >= 0 else 'Pierdes'} {txt_dif(dif, mercado)}\n"
                   f"(Señal de las {hora(ev['t'])})")
         prio, tag = "urgent", "bell"
     return f"VIGILANTE BOT COMPRAVENTA: {ev['tipo']} {mercado}", cuerpo, prio, tag
