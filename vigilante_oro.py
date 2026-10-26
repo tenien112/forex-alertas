@@ -20,8 +20,9 @@ import numpy as np, pandas as pd, yfinance as yf, requests
 MERCADOS = {"ORO": "GC=F", "PLATA": "SI=F", "BITCOIN": "BTC-USD", "PETRÓLEO WTI": "CL=F",
             "EUR/USD": "EURUSD=X", "EUR/GBP": "EURGBP=X", "EUR/JPY": "EURJPY=X",
             "GBP/USD": "GBPUSD=X", "USD/CNH": "USDCNH=X", "USD/CHF": "USDCHF=X",
-            "GBP/CHF": "GBPCHF=X", "EUR/CHF": "EURCHF=X"}
-FOREX = {"EUR/USD", "EUR/GBP", "EUR/JPY", "GBP/USD", "USD/CNH", "USD/CHF", "GBP/CHF", "EUR/CHF"}
+            "GBP/CHF": "GBPCHF=X", "EUR/CHF": "EURCHF=X",
+            "USD/JPY": "USDJPY=X"}
+FOREX = {"EUR/USD", "EUR/GBP", "EUR/JPY", "GBP/USD", "USD/CNH", "USD/CHF", "GBP/CHF", "EUR/CHF", "USD/JPY"}
 TEMA = "forex-lorenzito-7k3q9"
 BF, BS, BG, NL = 12, 26, 9, 5          # MACD cascada
 EB, EC = 18, 5                         # EMA cascada
