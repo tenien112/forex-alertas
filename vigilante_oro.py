@@ -236,6 +236,8 @@ def main():
 
     bloques = list(resumen)
     print("\n".join(bloques))
+    if prueba or "--resumen" in sys.argv:
+        open("resumen_oro.txt", "w", encoding="utf-8").write("\n\n".join(bloques) + "\n")
 
     # Trocear para que el móvil no corte el mensaje
     partes, act = [], ""
