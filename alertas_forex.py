@@ -8,6 +8,7 @@ PARES = {"EUR/USD": "EURUSD=X", "EUR/GBP": "EURGBP=X", "EUR/JPY": "EURJPY=X", "G
          "EUR/CHF": "EURCHF=X", "GBP/CHF": "GBPCHF=X", "BITCOIN": "BTC-USD"}
 TFS = ["M30", "H1", "H2"]
 TEMA = "forex-lorenzito-7k3q9"
+ESTADO = "estado_forex.json"           # último estado de cada par (para no perder cambios)
 BF, BS, BG, NL = 12, 26, 9, 5          # MACD cascada
 EB, EC = 18, 5                         # EMA cascada
 INVERTIR = False
@@ -72,6 +73,11 @@ def main():
             s = s1.resample("2h", origin="epoch", label="left", closed="left").last().dropna()
         return cerradas(s, mins, hasta).values
 
+    try:
+        with open(ESTADO) as f: guardado = json.load(f)
+    except Exception:
+        guardado = {}
+    nuevo = dict(guardado)
     avisos = []; resumen = []
     for par in PARES:
         if par not in datos: continue
@@ -81,6 +87,9 @@ def main():
         e_prev = {tf: estado(v) for tf, v in ind_prev.items()}
         g_now = 1 if all(x == 1 for x in e_now.values()) else -1 if all(x == -1 for x in e_now.values()) else 0
         g_prev = 1 if all(x == 1 for x in e_prev.values()) else -1 if all(x == -1 for x in e_prev.values()) else 0
+        # Si hay estado guardado de la última revisión, se compara con él (GitHub a veces se salta horas)
+        if par in guardado: g_prev = guardado[par]
+        nuevo[par] = g_now
         resumen.append(f"{bonito(par)}: " + " ".join(f"{tf}{'+' if e_now[tf]==1 else '-' if e_now[tf]==-1 else '.'}" for tf in TFS)
                        + (" ALCISTA" if g_now == 1 else " BAJISTA" if g_now == -1 else ""))
         if g_now != g_prev:
@@ -108,6 +117,7 @@ def main():
         requests.post(f"https://ntfy.sh/{TEMA}", data=("Prueba OK. Estado actual:\n" + "\n".join(resumen)).encode("utf-8"),
                       headers={"Title": "VIGILANTE RADAR CAMBIO TENDENCIAS: funcionando".encode("utf-8"), "Priority": "default"}, timeout=15)
     if not avisos: print("Sin cambios: no se envía aviso.")
+    with open(ESTADO, "w") as f: json.dump(nuevo, f, indent=1, ensure_ascii=False)
 
 if __name__ == "__main__":
     main()

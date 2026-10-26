@@ -54,10 +54,10 @@ jobs:
       - name: Guardar hora del último aviso
         if: always()
         run: |
-          if [ -n "$(git status --porcelain estado_oro.json)" ]; then
+          if [ -n "$(git status --porcelain estado_oro.json estado_forex.json)" ]; then
             git config user.name "vigilante-oro"
             git config user.email "vigilante-oro@users.noreply.github.com"
-            git add estado_oro.json
-            git commit -m "Vigilante ORO: último aviso"
+            git add estado_oro.json estado_forex.json
+            git commit -m "Vigilantes: guardar último estado"
             git pull --rebase origin main && git push origin HEAD:main
           fi
