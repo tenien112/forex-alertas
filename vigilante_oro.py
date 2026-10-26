@@ -10,7 +10,7 @@ que salió positiva en el oro:
   - Sin SL, sin TP, sin filtro EMA, sin trailing.
 
 No guarda posiciones: en cada ejecución vuelve a simular el sistema vela a vela
-sobre los últimos días y avisa de las señales nuevas (COMPRA / VENDE / CIERRA)
+sobre los últimos días y avisa de las señales nuevas (ABRE LARGO / ABRE CORTO / CIERRA LARGO / CIERRA CORTO)
 que todavía no se hayan avisado. Solo guarda la hora del último aviso enviado
 (estado_oro.json) para no repetir.
 """
@@ -152,28 +152,33 @@ def txt_dif(dif, mercado):
     return f"unos {fmt(abs(dif), mercado)} por unidad"
 
 
+ETIQUETA = {"COMPRA": "ABRE LARGO", "VENDE": "ABRE CORTO",
+            "CIERRA COMPRA": "CIERRA LARGO", "CIERRA VENTA": "CIERRA CORTO"}
+
+
 def mensaje(mercado, ev):
     p = fmt(ev["precio"], mercado)
     if ev["tipo"] == "COMPRA":
-        cuerpo = (f"🟢 COMPRA {mercado} ahora.\n"
+        cuerpo = (f"🟢 ABRE LARGO en {mercado} ahora (entrar comprando).\n"
                   f"Precio aproximado: {p}\n"
                   f"(Señal de las {hora(ev['t'])})")
         prio, tag = "urgent", "green_circle"
     elif ev["tipo"] == "VENDE":
-        cuerpo = (f"🔴 VENDE {mercado} ahora.\n"
+        cuerpo = (f"🔴 ABRE CORTO en {mercado} ahora (entrar vendiendo).\n"
                   f"Precio aproximado: {p}\n"
                   f"(Señal de las {hora(ev['t'])})")
         prio, tag = "urgent", "red_circle"
     else:
         t0, p0 = ev["entrada"]
         dif = ev["precio"] - p0 if ev["tipo"] == "CIERRA COMPRA" else p0 - ev["precio"]
-        que = "COMPRA" if ev["tipo"] == "CIERRA COMPRA" else "VENTA"
-        cuerpo = (f"🔔 CIERRA ahora la {que} de {mercado}.\n"
+        que = "LARGO" if ev["tipo"] == "CIERRA COMPRA" else "CORTO"
+        cuerpo = (f"🔔 CIERRA el {que} de {mercado} ahora (solo cerrar, no abrir nada).\n"
+                  f"Abierto el {hora(t0)} a {fmt(p0, mercado)}\n"
                   f"Precio aproximado: {p}\n"
                   f"{'Ganas' if dif >= 0 else 'Pierdes'} {txt_dif(dif, mercado)}\n"
                   f"(Señal de las {hora(ev['t'])})")
         prio, tag = "urgent", "bell"
-    return f"VIGILANTE BOT COMPRAVENTA: {ev['tipo']} {mercado}", cuerpo, prio, tag
+    return f"VIGILANTE BOT COMPRAVENTA: {ETIQUETA[ev['tipo']]} {mercado}", cuerpo, prio, tag
 
 
 def enviar(titulo, cuerpo, prio="high", tag="chart_with_upwards_trend"):
@@ -218,7 +223,7 @@ def main():
                 linea = f"{mercado}: {tend}. No hay nada abierto. Espera el próximo aviso."
             else:
                 t0, p0 = ult["entrada"]
-                que = "COMPRA" if ult["pos"] == 1 else "VENTA"
+                que = "LARGO" if ult["pos"] == 1 else "CORTO"
                 linea = (f"{mercado}: {tend}. El sistema está en {que} desde el {hora(t0)} a {fmt(p0, mercado)}. "
                          f"Si no entraste, no entres ahora: espera al próximo aviso.")
             resumen.append(linea)
