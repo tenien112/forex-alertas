@@ -1,0 +1,45 @@
+name: Vigilante FOREX RADAR 5 TEMPORALIDADES 2 SALIDAS
+
+on:
+  # Solo prueba manual: la vigilancia programada va dentro de vigilante.yml
+  workflow_dispatch:
+    inputs:
+      prueba:
+        description: "Enviar aviso de prueba con el estado actual"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vigilante
+  cancel-in-progress: false
+
+jobs:
+  vigilar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Ejecutar vigilante FOREX RADAR 5 TEMPORALIDADES 2 SALIDAS
+        run: |
+          if [ "${{ github.event.inputs.prueba }}" = "true" ]; then
+            python vigilante_radar_forex.py --prueba || (sleep 30 && python vigilante_radar_forex.py --prueba)
+          else
+            python vigilante_radar_forex.py || (sleep 30 && python vigilante_radar_forex.py)
+          fi
+      - name: Guardar hora del último aviso
+        run: |
+          if [ -n "$(git status --porcelain estado_radar_forex.json resumen_radar_forex.txt)" ]; then
+            git config user.name "vigilante-radar-forex"
+            git config user.email "vigilante-radar-forex@users.noreply.github.com"
+            for f in estado_radar_forex.json resumen_radar_forex.txt; do [ -f "$f" ] && git add "$f"; done
+            git commit -m "Vigilante FOREX RADAR 5 TEMPORALIDADES 2 SALIDAS: último aviso"
+            git pull --rebase origin main && git push origin HEAD:main
+          fi
