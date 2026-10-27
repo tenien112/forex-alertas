@@ -1,30 +1,30 @@
 ORO: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-PLATA: baja ⬇️. El sistema está en CORTO desde el 26/10 20:30 a 53.975. Si no entraste, no entres ahora: espera al próximo aviso.
+PLATA: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 BITCOIN: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-PETRÓLEO WTI: sube ⬆️. El sistema está en LARGO desde el 22/10 08:00 a 99.23. Si no entraste, no entres ahora: espera al próximo aviso.
+PETRÓLEO WTI: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-EUR/USD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+EUR/USD: baja ⬇️. El sistema está en CORTO desde el 27/10 07:00 a 1.11694. Si no entraste, no entres ahora: espera al próximo aviso.
 
-EUR/GBP: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+EUR/GBP: baja ⬇️. El sistema está en CORTO desde el 27/10 22:00 a 0.83591. Si no entraste, no entres ahora: espera al próximo aviso.
 
-EUR/JPY: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+EUR/JPY: baja ⬇️. El sistema está en CORTO desde el 27/10 11:00 a 175.741. Si no entraste, no entres ahora: espera al próximo aviso.
 
 GBP/USD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-USD/CNH: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+USD/CNH: baja ⬇️. El sistema está en CORTO desde el 27/10 13:30 a 6.66425. Si no entraste, no entres ahora: espera al próximo aviso.
 
 USD/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 GBP/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-EUR/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+EUR/CHF: baja ⬇️. El sistema está en CORTO desde el 27/10 22:00 a 0.92123. Si no entraste, no entres ahora: espera al próximo aviso.
 
 USD/JPY: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-EUR/CAD: baja ⬇️. El sistema está en CORTO desde el 26/10 17:30 a 1.56751. Si no entraste, no entres ahora: espera al próximo aviso.
+EUR/CAD: baja ⬇️. El sistema está en CORTO desde el 27/10 21:30 a 1.56368. Si no entraste, no entres ahora: espera al próximo aviso.
 
 EUR/AUD: baja ⬇️. El sistema está en CORTO desde el 26/10 11:00 a 1.59228. Si no entraste, no entres ahora: espera al próximo aviso.
 
