@@ -61,7 +61,7 @@ jobs:
           else
             python vigilante_commodities.py || (sleep 30 && python vigilante_commodities.py)
           fi
-      - name: Ejecutar vigilante RADAR COMMODITIES (metales, petróleo y criptos en M30-H8)
+      - name: Ejecutar vigilante COMMODITIES RADAR 5 TEMPORALIDADES 2 SALIDAS (metales, petróleo y criptos en M30-H8)
         if: github.event_name == 'schedule' || github.event.inputs.prueba != 'true'
         continue-on-error: true
         run: |

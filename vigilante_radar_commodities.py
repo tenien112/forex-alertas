@@ -1,6 +1,6 @@
 import time
 """
-VIGILANTE RADAR COMMODITIES by Lorenzo
+VIGILANTE COMMODITIES RADAR 5 TEMPORALIDADES 2 SALIDAS by Lorenzo
 Igual que el BOT COMMODITIES pero con 5 temporalidades: M30, H1, H2, H4, H8.
   - ENTRADA: ABRE LARGO cuando las 5 se alinean positivas por primera vez;
              ABRE CORTO cuando se alinean negativas.
@@ -170,7 +170,7 @@ def mensaje(mercado, ev):
                   f"{'Ganas' if dif >= 0 else 'Pierdes'} {txt_dif(dif, mercado)}\n"
                   f"(Señal de las {hora(ev['t'])})")
         prio, tag = "urgent", "bell"
-    return f"VIGILANTE RADAR COMMODITIES: {ETIQUETA[ev['tipo']]} {mercado}", cuerpo, prio, tag
+    return f"VIGILANTE COMMODITIES RADAR 5 TEMPORALIDADES 2 SALIDAS: {ETIQUETA[ev['tipo']]} {mercado}", cuerpo, prio, tag
 
 
 def enviar(titulo, cuerpo, prio="high", tag="chart_with_upwards_trend"):
@@ -235,9 +235,9 @@ def main():
             time.sleep(2)
 
     if prueba:
-        mandar("VIGILANTE RADAR COMMODITIES: estado actual", "default", "white_check_mark")
+        mandar("VIGILANTE COMMODITIES RADAR 5 TEMPORALIDADES 2 SALIDAS: estado actual", "default", "white_check_mark")
     elif "--resumen" in sys.argv:
-        mandar("VIGILANTE RADAR COMMODITIES: resumen diario", "default", "sunrise")
+        mandar("VIGILANTE COMMODITIES RADAR 5 TEMPORALIDADES 2 SALIDAS: resumen diario", "default", "sunrise")
 
     json.dump(estado, open(ESTADO, "w", encoding="utf-8"), indent=1)
 
