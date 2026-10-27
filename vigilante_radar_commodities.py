@@ -153,12 +153,12 @@ def mensaje(mercado, ev):
     if ev["tipo"] == "COMPRA":
         cuerpo = (f"🟢 ABRE LARGO en {mercado} ahora (entrar comprando).\n"
                   f"Precio aproximado: {p}\n"
-                  f"(Señal de las {hora(ev['t'])})")
+                  f"{txt_est(ev['est'])}\n(Señal de las {hora(ev['t'])})")
         prio, tag = "urgent", "green_circle"
     elif ev["tipo"] == "VENDE":
         cuerpo = (f"🔴 ABRE CORTO en {mercado} ahora (entrar vendiendo).\n"
                   f"Precio aproximado: {p}\n"
-                  f"(Señal de las {hora(ev['t'])})")
+                  f"{txt_est(ev['est'])}\n(Señal de las {hora(ev['t'])})")
         prio, tag = "urgent", "red_circle"
     else:
         t0, p0 = ev["entrada"]
@@ -168,7 +168,7 @@ def mensaje(mercado, ev):
                   f"Abierto el {hora(t0)} a {fmt(p0, mercado)}\n"
                   f"Precio aproximado: {p}\n"
                   f"{'Ganas' if dif >= 0 else 'Pierdes'} {txt_dif(dif, mercado)}\n"
-                  f"(Señal de las {hora(ev['t'])})")
+                  f"{txt_est(ev['est'])}\n(Señal de las {hora(ev['t'])})")
         prio, tag = "urgent", "bell"
     return f"VIGILANTE COMMODITIES RADAR 5 TEMPORALIDADES 2 SALIDAS: {ETIQUETA[ev['tipo']]} {mercado}", cuerpo, prio, tag
 
@@ -210,7 +210,7 @@ def main():
 
         if ult:
             g = 1 if all(x == 1 for x in ult["est"]) else -1 if all(x == -1 for x in ult["est"]) else 0
-            tend = "sube ⬆️" if g == 1 else "baja ⬇️" if g == -1 else "sin dirección clara"
+            tend = txt_est(ult["est"]) + (" ALCISTA ⬆️" if g == 1 else " BAJISTA ⬇️" if g == -1 else " sin dirección clara")
             if ult["pos"] == 0:
                 linea = f"{mercado}: {tend}. No hay nada abierto. Espera el próximo aviso."
             else:
