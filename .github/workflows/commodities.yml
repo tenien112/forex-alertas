@@ -1,4 +1,4 @@
-name: Vigilante COMMODITIES
+name: Vigilante BOT COMMODITIES
 
 on:
   # Solo prueba manual: la vigilancia programada va dentro de vigilante.yml
@@ -40,6 +40,6 @@ jobs:
             git config user.name "vigilante-commodities"
             git config user.email "vigilante-commodities@users.noreply.github.com"
             for f in estado_commodities.json resumen_commodities.txt; do [ -f "$f" ] && git add "$f"; done
-            git commit -m "Vigilante COMMODITIES: último aviso"
+            git commit -m "Vigilante BOT COMMODITIES: último aviso"
             git pull --rebase origin main && git push origin HEAD:main
           fi

@@ -1,6 +1,6 @@
 import time
 """
-VIGILANTE COMMODITIES by Lorenzo
+VIGILANTE BOT COMMODITIES by Lorenzo
 Mismo sistema que el BOT COMPRAVENTA, pero un escalón más lento (probado 1 año
 y 18 meses con su propio código, los cuatro mercados en positivo):
   - Solo ORO, PLATA, PETRÓLEO WTI y BITCOIN
@@ -177,7 +177,7 @@ def mensaje(mercado, ev):
                   f"{'Ganas' if dif >= 0 else 'Pierdes'} {txt_dif(dif, mercado)}\n"
                   f"(Señal de las {hora(ev['t'])})")
         prio, tag = "urgent", "bell"
-    return f"VIGILANTE COMMODITIES: {ETIQUETA[ev['tipo']]} {mercado}", cuerpo, prio, tag
+    return f"VIGILANTE BOT COMMODITIES: {ETIQUETA[ev['tipo']]} {mercado}", cuerpo, prio, tag
 
 
 def enviar(titulo, cuerpo, prio="high", tag="chart_with_upwards_trend"):
@@ -244,9 +244,9 @@ def main():
             time.sleep(2)
 
     if prueba:
-        mandar("VIGILANTE COMMODITIES: estado actual", "default", "white_check_mark")
+        mandar("VIGILANTE BOT COMMODITIES: estado actual", "default", "white_check_mark")
     elif "--resumen" in sys.argv:
-        mandar("VIGILANTE COMMODITIES: resumen diario", "default", "sunrise")
+        mandar("VIGILANTE BOT COMMODITIES: resumen diario", "default", "sunrise")
 
     json.dump(estado, open(ESTADO, "w", encoding="utf-8"), indent=1)
 
