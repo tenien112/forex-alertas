@@ -6,14 +6,18 @@ Igual que el BOT COMMODITIES pero con 5 temporalidades: M30, H1, H2, H4, H8.
              ABRE CORTO cuando se alinean negativas.
   - SALIDA:  cierra cuando M30 y H1 dejan de cumplir las dos a la vez,
              o si la alineación global se da la vuelta.
-  - Mercados: oro, plata, platino, paladio, petróleo WTI, bitcoin y ethereum.
+  - Mercados: oro, plata, platino, paladio, petróleo WTI, bitcoin, ethereum y 16 pares de divisas.
 """
 import sys, json, os
 import numpy as np, pandas as pd, yfinance as yf, requests
 
 MERCADOS = {"ORO": "GC=F", "PLATA": "SI=F", "PLATINO": "PL=F", "PALADIO": "PA=F",
-            "PETRÓLEO WTI": "CL=F", "BITCOIN": "BTC-USD", "ETHEREUM": "ETH-USD"}
-FOREX = set()
+            "PETRÓLEO WTI": "CL=F", "BITCOIN": "BTC-USD", "ETHEREUM": "ETH-USD",
+            "EUR/USD": "EURUSD=X", "EUR/GBP": "EURGBP=X", "EUR/JPY": "EURJPY=X", "GBP/USD": "GBPUSD=X",
+            "USD/JPY": "USDJPY=X", "GBP/JPY": "GBPJPY=X", "EUR/AUD": "EURAUD=X", "EUR/CAD": "EURCAD=X",
+            "AUD/USD": "AUDUSD=X", "USD/CAD": "USDCAD=X", "GBP/AUD": "GBPAUD=X", "GBP/CAD": "GBPCAD=X",
+            "USD/CNH": "USDCNH=X", "USD/CHF": "USDCHF=X", "EUR/CHF": "EURCHF=X", "GBP/CHF": "GBPCHF=X"}
+FOREX = {m for m in MERCADOS if "/" in m}
 TEMA = "forex-lorenzito-7k3q9"
 BF, BS, BG, NL = 12, 26, 9, 5          # MACD cascada
 EB, EC = 18, 5                         # EMA cascada
@@ -225,7 +229,10 @@ def main():
     if prueba or "--resumen" in sys.argv:
         open("resumen_radar_commodities.txt", "w", encoding="utf-8").write("\n\n".join(bloques) + "\n")
 
-    partes = ["\n\n".join(bloques)] if bloques else []   # mensaje corto: va entero en uno
+    # dos mensajes: 1/2 materias primas, 2/2 divisas (el móvil corta los largos)
+    mp = [b for b in bloques if "/" not in b.split(":")[0]]
+    fx = [b for b in bloques if "/" in b.split(":")[0]]
+    partes = [x for x in ("\n\n".join(mp), "\n\n".join(fx)) if x]
 
     def mandar(titulo, prio, tag):
         n = len(partes)
