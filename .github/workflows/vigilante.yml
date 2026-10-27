@@ -52,7 +52,7 @@ jobs:
           else
             python vigilante_oro.py || (sleep 30 && python vigilante_oro.py)
           fi
-      - name: Ejecutar vigilante BOT COMMODITIES (oro, plata, petróleo y bitcoin en H1-H8)
+      - name: Ejecutar vigilante BOT COMMODITIES (metales, petróleo y criptos en H1-H8)
         if: github.event_name == 'schedule' || github.event.inputs.prueba != 'true'
         continue-on-error: true
         run: |

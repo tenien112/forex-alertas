@@ -3,7 +3,7 @@ import time
 VIGILANTE BOT COMMODITIES by Lorenzo
 Mismo sistema que el BOT COMPRAVENTA, pero un escalón más lento (probado 1 año
 y 18 meses con su propio código, los cuatro mercados en positivo):
-  - Solo ORO, PLATA, PETRÓLEO WTI y BITCOIN
+  - ORO, PLATA, PLATINO, PALADIO, PETRÓLEO WTI, BITCOIN y ETHEREUM
   - 4 temporalidades: H1, H2, H4, H8 (los 4 indicadores de siempre)
   - ENTRADA: COMPRA cuando las 4 se alinean positivas por primera vez
              (alineación nueva); VENDE cuando se alinean negativas.
@@ -19,7 +19,8 @@ que todavía no se hayan avisado. Solo guarda la hora del último aviso enviado
 import sys, json, os
 import numpy as np, pandas as pd, yfinance as yf, requests
 
-MERCADOS = {"ORO": "GC=F", "PLATA": "SI=F", "PETRÓLEO WTI": "CL=F", "BITCOIN": "BTC-USD"}
+MERCADOS = {"ORO": "GC=F", "PLATA": "SI=F", "PLATINO": "PL=F", "PALADIO": "PA=F",
+            "PETRÓLEO WTI": "CL=F", "BITCOIN": "BTC-USD", "ETHEREUM": "ETH-USD"}
 FOREX = set()
 TEMA = "forex-lorenzito-7k3q9"
 BF, BS, BG, NL = 12, 26, 9, 5          # MACD cascada

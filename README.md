@@ -16,4 +16,4 @@ Resumen diario de lunes a viernes sobre las 9 (Madrid). Prueba manual: pestaña 
 
 # Vigilante BOT BOT COMMODITIES by Lorenzo
 
-Mismo sistema que el BOT COMPRAVENTA pero en H1, H2, H4 y H8 (salida cuando falla H1; solo alineación nueva), solo para ORO, PLATA, PETRÓLEO WTI y BITCOIN. Se ejecuta cada 30 minutos dentro de vigilante.yml y avisa por ntfy (mismo tema) con títulos «VIGILANTE BOT BOT COMMODITIES». Resumen diario sobre las 9 (Madrid). Prueba manual: Actions → Vigilante BOT BOT COMMODITIES → Run workflow → marcar 'prueba'.
+Mismo sistema que el BOT COMPRAVENTA pero en H1, H2, H4 y H8 (salida cuando falla H1; solo alineación nueva), para ORO, PLATA, PLATINO, PALADIO, PETRÓLEO WTI, BITCOIN y ETHEREUM. Se ejecuta cada 30 minutos dentro de vigilante.yml y avisa por ntfy (mismo tema) con títulos «VIGILANTE BOT BOT COMMODITIES». Resumen diario sobre las 9 (Madrid). Prueba manual: Actions → Vigilante BOT BOT COMMODITIES → Run workflow → marcar 'prueba'.
