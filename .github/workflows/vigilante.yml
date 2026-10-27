@@ -52,13 +52,23 @@ jobs:
           else
             python vigilante_oro.py || (sleep 30 && python vigilante_oro.py)
           fi
+      - name: Ejecutar vigilante COMMODITIES (oro, plata, petróleo y bitcoin en H1-H8)
+        if: github.event_name == 'schedule' || github.event.inputs.prueba != 'true'
+        continue-on-error: true
+        run: |
+          if [ "${{ github.event.schedule }}" = "45 7 * * 1-5" ]; then
+            python vigilante_commodities.py --resumen || (sleep 30 && python vigilante_commodities.py --resumen)
+          else
+            python vigilante_commodities.py || (sleep 30 && python vigilante_commodities.py)
+          fi
       - name: Guardar hora del último aviso
         if: always()
         run: |
-          if [ -n "$(git status --porcelain estado_oro.json estado_forex.json)" ]; then
+          if [ -n "$(git status --porcelain estado_oro.json estado_forex.json estado_commodities.json)" ]; then
             git config user.name "vigilante-oro"
             git config user.email "vigilante-oro@users.noreply.github.com"
             git add estado_oro.json estado_forex.json
+            [ -f estado_commodities.json ] && git add estado_commodities.json
             git commit -m "Vigilantes: guardar último estado"
             git pull --rebase origin main && git push origin HEAD:main
           fi
