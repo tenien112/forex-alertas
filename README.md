@@ -14,6 +14,6 @@ Cada 30 minutos (domingo noche a viernes noche) replica el cBot CLAUDE-VIGILANTE
 
 Resumen diario de lunes a viernes sobre las 9 (Madrid). Prueba manual: pestaña Actions → Vigilante ORO y PLATA → Run workflow → marcar 'prueba'.
 
-# Vigilante BOT COMMODITIES by Lorenzo
+# Vigilante BOT BOT COMMODITIES by Lorenzo
 
-Mismo sistema que el BOT COMPRAVENTA pero en H1, H2, H4 y H8 (salida cuando falla H1; solo alineación nueva), solo para ORO, PLATA, PETRÓLEO WTI y BITCOIN. Se ejecuta cada 30 minutos dentro de vigilante.yml y avisa por ntfy (mismo tema) con títulos «VIGILANTE BOT COMMODITIES». Resumen diario sobre las 9 (Madrid). Prueba manual: Actions → Vigilante BOT COMMODITIES → Run workflow → marcar 'prueba'.
+Mismo sistema que el BOT COMPRAVENTA pero en H1, H2, H4 y H8 (salida cuando falla H1; solo alineación nueva), solo para ORO, PLATA, PETRÓLEO WTI y BITCOIN. Se ejecuta cada 30 minutos dentro de vigilante.yml y avisa por ntfy (mismo tema) con títulos «VIGILANTE BOT BOT COMMODITIES». Resumen diario sobre las 9 (Madrid). Prueba manual: Actions → Vigilante BOT BOT COMMODITIES → Run workflow → marcar 'prueba'.

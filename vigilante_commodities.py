@@ -232,9 +232,7 @@ def main():
     if prueba or "--resumen" in sys.argv:
         open("resumen_commodities.txt", "w", encoding="utf-8").write("\n\n".join(bloques) + "\n")
 
-    # Dos mitades; se manda primero la 2/2 para que en el móvil quede arriba la 1/2
-    mitad = (len(bloques) + 1) // 2
-    partes = [p for p in ("\n\n".join(bloques[:mitad]), "\n\n".join(bloques[mitad:])) if p]
+    partes = ["\n\n".join(bloques)] if bloques else []   # mensaje corto: va entero en uno
 
     def mandar(titulo, prio, tag):
         n = len(partes)
