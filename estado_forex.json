@@ -6,7 +6,7 @@
  "USD/JPY": 0,
  "GBP/JPY": 0,
  "EUR/AUD": -1,
- "EUR/CAD": -1,
+ "EUR/CAD": 0,
  "AUD/USD": 0,
  "USD/CAD": 0,
  "GBP/AUD": 0,
@@ -18,5 +18,6 @@
  "EUR/CHF": 0,
  "GBP/CHF": 0,
  "BITCOIN": 0,
- "PLATA": 0
+ "PLATA": 0,
+ "EUR/CNH": -1
 }
