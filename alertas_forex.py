@@ -35,6 +35,27 @@ def indicadores(c):
     tot = np.sign(cons) + np.sign(res) + orden(True)            # 4 (capa 3 con precio)
     return [cons, res, o3, tot]
 
+def indicadores_serie(c):
+    # Los mismos 4 indicadores, pero calculados en cada vela (las EMAs son causales)
+    c = np.asarray(c, dtype=float)
+    azul = np.zeros(len(c)); roja = np.zeros(len(c)); suma = np.zeros(len(c))
+    for L in range(NL):
+        m = 1 << L
+        macd = ema(c, BF*m) - ema(c, BS*m)
+        h = macd - ema(macd, BG*m)
+        azul += np.maximum(h, 0); roja += np.maximum(-h, 0); suma += macd
+    tot_ar = azul + roja
+    cons = np.divide(azul - roja, tot_ar, out=np.zeros(len(c)), where=tot_ar > 0)
+    res = (-1 if INVERTIR else 1)*suma/NL
+    e = [ema(c, EB*(1 << L)) for L in range(EC)]
+    sube = np.all([e[i] > e[i+1] for i in range(EC-1)], axis=0)
+    baja = np.all([e[i] < e[i+1] for i in range(EC-1)], axis=0)
+    o3 = np.where(sube, 1, np.where(baja, -1, 0))
+    o4 = np.where(sube & (c > e[0]), 1, np.where(baja & (c < e[0]), -1, 0))
+    tot = np.sign(cons) + np.sign(res) + o4
+    v = np.vstack([cons, res, o3, tot])
+    return np.where(np.all(v > 0, axis=0), 1, np.where(np.all(v < 0, axis=0), -1, 0))
+
 def estado(v):
     if all(x > 0 for x in v): return 1
     if all(x < 0 for x in v): return -1
@@ -66,6 +87,32 @@ def main():
         h1 = h1[h1.index >= h1.index[-1] - pd.Timedelta(days=500)]
         datos[par] = {"M30": (m30, 30), "H1": (h1, 60), "H2": (h1, 120)}
 
+    def serie_completa(par, tf):
+        s, mins = datos[par][tf]
+        if tf == "H2":
+            s = s.resample("2h", origin="epoch", label="left", closed="left").last().dropna()
+        return s, mins
+
+    def desde_cuando(par, g, hasta):
+        # Busca la vela M30 desde la que las 3 temporalidades están alineadas en el mismo sentido
+        cierres = None; estados = {}
+        for tf in TFS:
+            s, mins = serie_completa(par, tf)
+            st = pd.Series(indicadores_serie(s.values), index=s.index + pd.Timedelta(minutes=mins))
+            estados[tf] = st[st.index <= hasta]
+            if tf == "M30": cierres = estados[tf].index
+        if cierres is None or len(cierres) == 0: return None
+        gs = np.ones(len(cierres), dtype=bool)
+        for tf in TFS:
+            st = estados[tf]
+            pos = st.index.searchsorted(cierres, side="right") - 1
+            val = np.where(pos >= 0, st.values[np.clip(pos, 0, None)], 0)
+            gs &= (val == g)
+        if not gs[-1]: return None
+        malos = np.where(~gs)[0]
+        if len(malos) == 0: return ("antes del", cierres[0])
+        return ("desde el", cierres[malos[-1] + 1])
+
     def serie(par, tf, hasta):
         s, mins = datos[par][tf]
         if tf == "H2":
@@ -90,8 +137,15 @@ def main():
         # Si hay estado guardado de la última revisión, se compara con él (GitHub a veces se salta horas)
         if par in guardado: g_prev = guardado[par]
         nuevo[par] = g_now
+        texto_desde = ""
+        if g_now != 0:
+            try:
+                d = desde_cuando(par, g_now, T)
+                if d: texto_desde = f" {d[0]} {d[1].tz_convert('Europe/Madrid'):%d/%m %H:%M}"
+            except Exception as ex:
+                print(f"No se pudo calcular desde cuándo para {par}: {ex}")
         resumen.append(f"{bonito(par)}: " + " ".join(f"{tf}{'+' if e_now[tf]==1 else '-' if e_now[tf]==-1 else '.'}" for tf in TFS)
-                       + (" ALCISTA" if g_now == 1 else " BAJISTA" if g_now == -1 else ""))
+                       + (" ALCISTA" if g_now == 1 else " BAJISTA" if g_now == -1 else "") + texto_desde)
         if g_now != g_prev:
             if g_prev != 0:
                 fallos = []
