@@ -6,7 +6,7 @@ Mismo sistema que el COMMODITIES RADAR, para divisas, con 5 temporalidades: M30,
              ABRE CORTO cuando se alinean negativas.
   - SALIDA:  cierra cuando M30 y H1 dejan de cumplir las dos a la vez,
              o si la alineación global se da la vuelta.
-  - Mercados: 16 pares de divisas.
+  - Mercados: 17 pares de divisas.
 """
 import sys, json, os
 import numpy as np, pandas as pd, yfinance as yf, requests
@@ -24,6 +24,7 @@ MERCADOS = {"EUR/USD": "EURUSD=X",
             "GBP/AUD": "GBPAUD=X",
             "GBP/CAD": "GBPCAD=X",
             "USD/CNH": "USDCNH=X",
+            "EUR/CNH": "EURCNH=X",
             "USD/CHF": "USDCHF=X",
             "EUR/CHF": "EURCHF=X",
             "GBP/CHF": "GBPCHF=X"}
@@ -239,7 +240,7 @@ def main():
     if prueba or "--resumen" in sys.argv:
         open("resumen_radar_forex.txt", "w", encoding="utf-8").write("\n\n".join(bloques) + "\n")
 
-    # 16 pares: va en dos mensajes (1/2 y 2/2) porque el móvil corta los largos
+    # 17 pares: va en dos mensajes (1/2 y 2/2) porque el móvil corta los largos
     mitad = (len(bloques) + 1) // 2
     partes = [x for x in ("\n\n".join(bloques[:mitad]), "\n\n".join(bloques[mitad:])) if x]
 

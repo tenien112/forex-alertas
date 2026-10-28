@@ -4,7 +4,7 @@ import numpy as np, pandas as pd, yfinance as yf, requests
 PARES = {"EUR/USD": "EURUSD=X", "EUR/GBP": "EURGBP=X", "EUR/JPY": "EURJPY=X", "GBP/USD": "GBPUSD=X",
          "USD/JPY": "USDJPY=X", "GBP/JPY": "GBPJPY=X", "EUR/AUD": "EURAUD=X", "EUR/CAD": "EURCAD=X",
          "AUD/USD": "AUDUSD=X", "USD/CAD": "USDCAD=X", "GBP/AUD": "GBPAUD=X", "GBP/CAD": "GBPCAD=X",
-         "PETROLEO WTI": "CL=F", "ORO": "GC=F", "PLATA": "SI=F", "USD/CNH": "CNH=X", "USD/CHF": "USDCHF=X",
+         "PETROLEO WTI": "CL=F", "ORO": "GC=F", "PLATA": "SI=F", "USD/CNH": "CNH=X", "EUR/CNH": "EURCNH=X", "USD/CHF": "USDCHF=X",
          "EUR/CHF": "EURCHF=X", "GBP/CHF": "GBPCHF=X", "BITCOIN": "BTC-USD"}
 TFS = ["M30", "H1", "H2"]
 TEMA = "forex-lorenzito-7k3q9"
