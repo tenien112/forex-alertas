@@ -95,8 +95,8 @@ def main():
         return s, mins
 
     def subrayar(t):
-        # Subrayado con carácter Unicode: se ve en el móvil (ntfy) y en la app BOLSA
-        return "".join(c + "\u0332" for c in t)
+        # Marca entre corchetes: legible en el móvil (ntfy); la app BOLSA lo pinta subrayado
+        return f"[{t}]"
 
     def desde_cuando(par, combo, hasta):
         # Busca la vela M30 desde la que el estado (signo de M30, H1 y H2) es el mismo que ahora
