@@ -1,16 +1,16 @@
 {
- "EUR/USD": -1,
+ "EUR/USD": 0,
  "EUR/GBP": 0,
  "EUR/JPY": 0,
  "GBP/USD": 0,
  "USD/JPY": 0,
  "GBP/JPY": 0,
  "EUR/AUD": 0,
- "EUR/CAD": -1,
+ "EUR/CAD": 0,
  "AUD/USD": 0,
  "USD/CAD": 0,
  "GBP/AUD": 0,
- "GBP/CAD": -1,
+ "GBP/CAD": 0,
  "PETROLEO WTI": 0,
  "ORO": 0,
  "USD/CNH": -1,
@@ -19,7 +19,7 @@
  "GBP/CHF": 1,
  "BITCOIN": 0,
  "PLATA": -1,
- "EUR/CNH": -1,
+ "EUR/CNH": 0,
  "PALADIO": -1,
  "PLATINO": -1
 }
