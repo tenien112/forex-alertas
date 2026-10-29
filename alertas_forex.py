@@ -93,8 +93,8 @@ def main():
             s = s.resample("2h", origin="epoch", label="left", closed="left").last().dropna()
         return s, mins
 
-    def desde_cuando(par, g, hasta):
-        # Busca la vela M30 desde la que las 3 temporalidades están alineadas en el mismo sentido
+    def desde_cuando(par, combo, hasta):
+        # Busca la vela M30 desde la que el estado (signo de M30, H1 y H2) es el mismo que ahora
         cierres = None; estados = {}
         for tf in TFS:
             s, mins = serie_completa(par, tf)
@@ -107,7 +107,7 @@ def main():
             st = estados[tf]
             pos = st.index.searchsorted(cierres, side="right") - 1
             val = np.where(pos >= 0, st.values[np.clip(pos, 0, None)], 0)
-            gs &= (val == g)
+            gs &= (val == combo[tf])
         if not gs[-1]: return None
         malos = np.where(~gs)[0]
         if len(malos) == 0: return ("antes del", cierres[0])
@@ -138,12 +138,11 @@ def main():
         if par in guardado: g_prev = guardado[par]
         nuevo[par] = g_now
         texto_desde = ""
-        if g_now != 0:
-            try:
-                d = desde_cuando(par, g_now, T)
-                if d: texto_desde = f" {d[0]} {d[1].tz_convert('Europe/Madrid'):%d/%m %H:%M}"
-            except Exception as ex:
-                print(f"No se pudo calcular desde cuándo para {par}: {ex}")
+        try:
+            d = desde_cuando(par, e_now, T)
+            if d: texto_desde = f" {d[0]} {d[1].tz_convert('Europe/Madrid'):%d/%m %H:%M}"
+        except Exception as ex:
+            print(f"No se pudo calcular desde cuándo para {par}: {ex}")
         resumen.append(f"{bonito(par)}: " + " ".join(f"{tf}{'+' if e_now[tf]==1 else '-' if e_now[tf]==-1 else '.'}" for tf in TFS)
                        + (" ALCISTA" if g_now == 1 else " BAJISTA" if g_now == -1 else "") + texto_desde)
         if g_now != g_prev:
@@ -160,6 +159,7 @@ def main():
                                f"{'🟢' if g_now==1 else '🔴'} {bonito(par)} {'ALCISTA' if g_now==1 else 'BAJISTA'}: los 4 indicadores "
                                f"{'positivos' if g_now==1 else 'negativos'} en las 3 temporalidades (M30, H1 y H2)"))
 
+    resumen.sort()                        # mercados por orden alfabético
     print(f"Vela evaluada: {T:%d/%m %H:%M} UTC (comparada con {P:%H:%M})")
     print("\n".join(resumen))
     enviar = "--prueba" in sys.argv
