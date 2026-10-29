@@ -1,11 +1,12 @@
 import sys, json, datetime as dt
 import numpy as np, pandas as pd, yfinance as yf, requests
 
-PARES = {"EUR/USD": "EURUSD=X", "EUR/GBP": "EURGBP=X", "EUR/JPY": "EURJPY=X", "GBP/USD": "GBPUSD=X",
-         "USD/JPY": "USDJPY=X", "GBP/JPY": "GBPJPY=X", "EUR/AUD": "EURAUD=X", "EUR/CAD": "EURCAD=X",
-         "AUD/USD": "AUDUSD=X", "USD/CAD": "USDCAD=X", "GBP/AUD": "GBPAUD=X", "GBP/CAD": "GBPCAD=X",
-         "PETROLEO WTI": "CL=F", "ORO": "GC=F", "PLATA": "SI=F", "USD/CNH": "CNH=X", "EUR/CNH": "EURCNH=X", "USD/CHF": "USDCHF=X",
-         "EUR/CHF": "EURCHF=X", "GBP/CHF": "GBPCHF=X", "BITCOIN": "BTC-USD"}
+# Forex por orden alfabético y después las commodities agrupadas (también alfabético)
+PARES = {"AUD/USD": "AUDUSD=X", "EUR/AUD": "EURAUD=X", "EUR/CAD": "EURCAD=X", "EUR/CHF": "EURCHF=X", "EUR/CNH": "EURCNH=X", "EUR/GBP": "EURGBP=X",
+         "EUR/JPY": "EURJPY=X", "EUR/USD": "EURUSD=X", "GBP/AUD": "GBPAUD=X", "GBP/CAD": "GBPCAD=X", "GBP/CHF": "GBPCHF=X", "GBP/JPY": "GBPJPY=X",
+         "GBP/USD": "GBPUSD=X", "USD/CAD": "USDCAD=X", "USD/CHF": "USDCHF=X", "USD/CNH": "CNH=X", "USD/JPY": "USDJPY=X",
+         "BITCOIN": "BTC-USD", "ORO": "GC=F", "PETROLEO WTI": "CL=F", "PLATA": "SI=F"}
+COMMODITIES = ['BITCOIN', 'ORO', 'PETROLEO WTI', 'PLATA']
 TFS = ["M30", "H1", "H2"]
 TEMA = "forex-lorenzito-7k3q9"
 ESTADO = "estado_forex.json"           # último estado de cada par (para no perder cambios)
@@ -93,6 +94,10 @@ def main():
             s = s.resample("2h", origin="epoch", label="left", closed="left").last().dropna()
         return s, mins
 
+    def subrayar(t):
+        # Subrayado con carácter Unicode: se ve en el móvil (ntfy) y en la app BOLSA
+        return "".join(c + "\u0332" for c in t)
+
     def desde_cuando(par, combo, hasta):
         # Busca la vela M30 desde la que el estado (signo de M30, H1 y H2) es el mismo que ahora
         cierres = None; estados = {}
@@ -102,16 +107,19 @@ def main():
             estados[tf] = st[st.index <= hasta]
             if tf == "M30": cierres = estados[tf].index
         if cierres is None or len(cierres) == 0: return None
-        gs = np.ones(len(cierres), dtype=bool)
+        gs = np.ones(len(cierres), dtype=bool); vals = {}
         for tf in TFS:
             st = estados[tf]
             pos = st.index.searchsorted(cierres, side="right") - 1
-            val = np.where(pos >= 0, st.values[np.clip(pos, 0, None)], 0)
-            gs &= (val == combo[tf])
+            vals[tf] = np.where(pos >= 0, st.values[np.clip(pos, 0, None)], 0)
+            gs &= (vals[tf] == combo[tf])
         if not gs[-1]: return None
         malos = np.where(~gs)[0]
-        if len(malos) == 0: return ("antes del", cierres[0])
-        return ("desde el", cierres[malos[-1] + 1])
+        if len(malos) == 0: return ("antes del", cierres[0], [])
+        i = malos[-1]
+        # Temporalidad(es) que cambiaron la última (las que no coincidían justo antes del cambio)
+        cambiadas = [tf for tf in TFS if vals[tf][i] != combo[tf]]
+        return ("desde el", cierres[i + 1], cambiadas)
 
     def serie(par, tf, hasta):
         s, mins = datos[par][tf]
@@ -137,13 +145,14 @@ def main():
         # Si hay estado guardado de la última revisión, se compara con él (GitHub a veces se salta horas)
         if par in guardado: g_prev = guardado[par]
         nuevo[par] = g_now
-        texto_desde = ""
+        texto_desde = ""; cambiadas = []
         try:
             d = desde_cuando(par, e_now, T)
+            if d: cambiadas = d[2]
             if d: texto_desde = (" antes" if d[0] == "antes del" else "") + f" {d[1].tz_convert('Europe/Madrid'):%d/%m %H:%M}"
         except Exception as ex:
             print(f"No se pudo calcular desde cuándo para {par}: {ex}")
-        resumen.append(f"{bonito(par)}: " + " ".join(f"{tf}{'+' if e_now[tf]==1 else '-' if e_now[tf]==-1 else '.'}" for tf in TFS)
+        resumen.append(f"{bonito(par)}: " + " ".join(subrayar(f"{tf}{'+' if e_now[tf]==1 else '-' if e_now[tf]==-1 else '.'}") if tf in cambiadas else f"{tf}{'+' if e_now[tf]==1 else '-' if e_now[tf]==-1 else '.'}" for tf in TFS)
                        + (" ALCISTA" if g_now == 1 else " BAJISTA" if g_now == -1 else "") + texto_desde)
         if g_now != g_prev:
             if g_prev != 0:
@@ -159,7 +168,12 @@ def main():
                                f"{'🟢' if g_now==1 else '🔴'} {bonito(par)} {'ALCISTA' if g_now==1 else 'BAJISTA'}: los 4 indicadores "
                                f"{'positivos' if g_now==1 else 'negativos'} en las 3 temporalidades (M30, H1 y H2)"))
 
-    resumen.sort()                        # mercados por orden alfabético
+    # Forex por orden alfabético y después las commodities agrupadas (también por orden alfabético)
+    clave = lambda l: (l.split(":")[0] in COMMODITIES, l.split(":")[0])
+    resumen.sort(key=clave)
+    i = next((n for n, l in enumerate(resumen) if l.split(":")[0] in COMMODITIES), None)
+    if i is not None: resumen.insert(i, "— COMMODITIES —")
+    if i: resumen.insert(0, "— FOREX —")
     print(f"Vela evaluada: {T:%d/%m %H:%M} UTC (comparada con {P:%H:%M})")
     print("\n".join(resumen))
     enviar = "--prueba" in sys.argv
