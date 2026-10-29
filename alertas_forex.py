@@ -140,7 +140,7 @@ def main():
         texto_desde = ""
         try:
             d = desde_cuando(par, e_now, T)
-            if d: texto_desde = f" {d[0]} {d[1].tz_convert('Europe/Madrid'):%d/%m %H:%M}"
+            if d: texto_desde = (" antes" if d[0] == "antes del" else "") + f" {d[1].tz_convert('Europe/Madrid'):%d/%m %H:%M}"
         except Exception as ex:
             print(f"No se pudo calcular desde cuándo para {par}: {ex}")
         resumen.append(f"{bonito(par)}: " + " ".join(f"{tf}{'+' if e_now[tf]==1 else '-' if e_now[tf]==-1 else '.'}" for tf in TFS)
