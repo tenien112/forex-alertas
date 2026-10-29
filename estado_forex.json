@@ -18,6 +18,6 @@
  "EUR/CHF": 0,
  "GBP/CHF": 1,
  "BITCOIN": 0,
- "PLATA": 0,
+ "PLATA": -1,
  "EUR/CNH": -1
 }
