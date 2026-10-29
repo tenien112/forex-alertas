@@ -5,8 +5,8 @@ import numpy as np, pandas as pd, yfinance as yf, requests
 PARES = {"AUD/USD": "AUDUSD=X", "EUR/AUD": "EURAUD=X", "EUR/CAD": "EURCAD=X", "EUR/CHF": "EURCHF=X", "EUR/CNH": "EURCNH=X", "EUR/GBP": "EURGBP=X",
          "EUR/JPY": "EURJPY=X", "EUR/USD": "EURUSD=X", "GBP/AUD": "GBPAUD=X", "GBP/CAD": "GBPCAD=X", "GBP/CHF": "GBPCHF=X", "GBP/JPY": "GBPJPY=X",
          "GBP/USD": "GBPUSD=X", "USD/CAD": "USDCAD=X", "USD/CHF": "USDCHF=X", "USD/CNH": "CNH=X", "USD/JPY": "USDJPY=X",
-         "BITCOIN": "BTC-USD", "ORO": "GC=F", "PETROLEO WTI": "CL=F", "PLATA": "SI=F"}
-COMMODITIES = ['BITCOIN', 'ORO', 'PETROLEO WTI', 'PLATA']
+         "BITCOIN": "BTC-USD", "ORO": "GC=F", "PALADIO": "PA=F", "PETROLEO WTI": "CL=F", "PLATA": "SI=F", "PLATINO": "PL=F"}
+COMMODITIES = ['BITCOIN', 'ORO', 'PALADIO', 'PETROLEO WTI', 'PLATA', 'PLATINO']
 TFS = ["M30", "H1", "H2"]
 TEMA = "forex-lorenzito-7k3q9"
 ESTADO = "estado_forex.json"           # último estado de cada par (para no perder cambios)
