@@ -1,7 +1,7 @@
 import sys, json
 import numpy as np, pandas as pd, yfinance as yf, requests
 # Mismos mercados e indicadores que el RADAR CAMBIO TENDENCIAS, pero en M15, M30 y H1
-from alertas_forex import PARES, COMMODITIES, NOMBRES, TEMA, indicadores, indicadores_serie, estado, cerradas
+from alertas_forex import PARES, COMMODITIES, NOMBRES, TEMA, indicadores, indicadores_serie, estado, cerradas, rangos_recencia, marca
 
 TFS = ["M15", "M30", "H1"]
 MINS = {"M15": 15, "M30": 30, "H1": 60}
@@ -51,9 +51,10 @@ def main():
             gs &= (vals[tf] == combo[tf])
         if not gs[-1]: return None
         malos = np.where(~gs)[0]
-        if len(malos) == 0: return ("antes", cierres[0], [])
+        rangos = rangos_recencia(vals, combo, TFS)
+        if len(malos) == 0: return ("antes", cierres[0], rangos)
         i = malos[-1]
-        return ("", cierres[i + 1], [tf for tf in TFS if vals[tf][i] != combo[tf]])
+        return ("", cierres[i + 1], rangos)
 
     try:
         with open(ESTADO) as f: guardado = json.load(f)
@@ -71,7 +72,7 @@ def main():
         g_now, g_prev = g(e_now), g(e_prev)
         if par in guardado: g_prev = guardado[par]
         nuevo[par] = g_now
-        texto = ""; cambiadas = []
+        texto = ""; cambiadas = {}
         try:
             d = desde_cuando(par, e_now, T)
             if d:
@@ -79,7 +80,7 @@ def main():
                 texto = (" antes" if d[0] else "") + f" {d[1].tz_convert('Europe/Madrid'):%d/%m %H:%M}"
         except Exception as ex:
             print(f"No se pudo calcular desde cuándo para {par}: {ex}")
-        resumen.append(f"{par}: " + " ".join(f"[{tf}{signo(e_now[tf])}]" if tf in cambiadas else f"{tf}{signo(e_now[tf])}" for tf in TFS)
+        resumen.append(f"{par}: " + " ".join(marca(f"{tf}{signo(e_now[tf])}", cambiadas.get(tf, 0)) for tf in TFS)
                        + (" ALCISTA" if g_now == 1 else " BAJISTA" if g_now == -1 else "") + texto)
         if g_now != g_prev:
             if g_prev != 0:

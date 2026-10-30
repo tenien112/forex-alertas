@@ -68,6 +68,19 @@ def cerradas(df, minutos, hasta):
 
 def bonito(p): return p
 
+def rangos_recencia(vals, combo, tfs):
+    # Para cada temporalidad, cuándo empezó su signo actual. 1 = la más reciente, 2 = la anterior, 3 = la más antigua
+    inicio = {}
+    for tf in tfs:
+        m = np.where(vals[tf] != combo[tf])[0]
+        inicio[tf] = m[-1] + 1 if len(m) else 0
+    orden = sorted(set(inicio.values()), reverse=True)
+    return {tf: orden.index(inicio[tf]) + 1 for tf in tfs}
+
+def marca(t, n):
+    # Corchetes según antigüedad: [X] la más reciente, [[X]] la anterior, [[[X]]] la más antigua (la app lo pinta como subrayado fino → grueso)
+    return "[" * n + t + "]" * n if n else t
+
 def main():
     ahora = pd.Timestamp.now(tz="UTC")
     madrid = ahora.tz_convert("Europe/Madrid")
@@ -115,11 +128,10 @@ def main():
             gs &= (vals[tf] == combo[tf])
         if not gs[-1]: return None
         malos = np.where(~gs)[0]
-        if len(malos) == 0: return ("antes del", cierres[0], [])
+        rangos = rangos_recencia(vals, combo, TFS)
+        if len(malos) == 0: return ("antes del", cierres[0], rangos)
         i = malos[-1]
-        # Temporalidad(es) que cambiaron la última (las que no coincidían justo antes del cambio)
-        cambiadas = [tf for tf in TFS if vals[tf][i] != combo[tf]]
-        return ("desde el", cierres[i + 1], cambiadas)
+        return ("desde el", cierres[i + 1], rangos)
 
     def serie(par, tf, hasta):
         s, mins = datos[par][tf]
@@ -145,14 +157,14 @@ def main():
         # Si hay estado guardado de la última revisión, se compara con él (GitHub a veces se salta horas)
         if par in guardado: g_prev = guardado[par]
         nuevo[par] = g_now
-        texto_desde = ""; cambiadas = []
+        texto_desde = ""; cambiadas = {}
         try:
             d = desde_cuando(par, e_now, T)
             if d: cambiadas = d[2]
             if d: texto_desde = (" antes" if d[0] == "antes del" else "") + f" {d[1].tz_convert('Europe/Madrid'):%d/%m %H:%M}"
         except Exception as ex:
             print(f"No se pudo calcular desde cuándo para {par}: {ex}")
-        resumen.append(f"{bonito(par)}: " + " ".join(subrayar(f"{tf}{'+' if e_now[tf]==1 else '-' if e_now[tf]==-1 else '.'}") if tf in cambiadas else f"{tf}{'+' if e_now[tf]==1 else '-' if e_now[tf]==-1 else '.'}" for tf in TFS)
+        resumen.append(f"{bonito(par)}: " + " ".join(marca(f"{tf}{'+' if e_now[tf]==1 else '-' if e_now[tf]==-1 else '.'}", cambiadas.get(tf, 0)) for tf in TFS)
                        + (" ALCISTA" if g_now == 1 else " BAJISTA" if g_now == -1 else "") + texto_desde)
         if g_now != g_prev:
             if g_prev != 0:
