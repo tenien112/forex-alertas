@@ -1,7 +1,7 @@
 import sys, json
 import numpy as np, pandas as pd, yfinance as yf, requests
 # Mismos mercados e indicadores que el RADAR CAMBIO TENDENCIAS, pero en M15, M30 y H1
-from alertas_forex import PARES, COMMODITIES, NOMBRES, TEMA, indicadores, indicadores_serie, estado, cerradas, rangos_recencia, marca, cadena
+from alertas_forex import PARES, COMMODITIES, NOMBRES, TEMA, indicadores, indicadores_serie, estado, cerradas, rangos_recencia, marca
 
 TFS = ["M15", "M30", "H1"]
 MINS = {"M15": 15, "M30": 30, "H1": 60}
@@ -80,7 +80,7 @@ def main():
                 texto = (" antes" if d[0] else "") + f" {d[1].tz_convert('Europe/Madrid'):%d/%m %H:%M}"
         except Exception as ex:
             print(f"No se pudo calcular desde cuándo para {par}: {ex}")
-        resumen.append(f"{par}: " + cadena([(f"{tf}{signo(e_now[tf])}", cambiadas.get(tf, 0)) for tf in TFS])
+        resumen.append(f"{par}: " + " ".join(marca(f"{tf}{signo(e_now[tf])}", cambiadas.get(tf, 0)) for tf in TFS)
                        + (" ALCISTA" if g_now == 1 else " BAJISTA" if g_now == -1 else "") + texto)
         if g_now != g_prev:
             if g_prev != 0:
