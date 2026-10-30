@@ -79,7 +79,7 @@ jobs:
           else
             python vigilante_radar_forex.py || (sleep 30 && python vigilante_radar_forex.py)
           fi
-      - name: Ejecutar vigilante RADAR M5-M10-M15-M30-H1-H2-H4 (mismos mercados que el RADAR CAMBIO TENDENCIAS)
+      - name: Ejecutar vigilante RADAR M5-M15-M30-H1-H2-H4 (mismos mercados que el RADAR CAMBIO TENDENCIAS)
         if: github.event_name == 'schedule' || github.event.inputs.prueba != 'true'
         continue-on-error: true
         run: python vigilante_radar_rapido.py || (sleep 30 && python vigilante_radar_rapido.py)
