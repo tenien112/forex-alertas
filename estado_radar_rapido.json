@@ -2,9 +2,9 @@
  "AUD/USD": 0,
  "EUR/AUD": 0,
  "EUR/CAD": -1,
- "EUR/CHF": -1,
+ "EUR/CHF": 0,
  "EUR/CNH": 0,
- "EUR/GBP": -1,
+ "EUR/GBP": 0,
  "EUR/JPY": 0,
  "EUR/USD": 0,
  "GBP/AUD": 0,
@@ -19,7 +19,7 @@
  "BITCOIN": 0,
  "ORO": -1,
  "PALADIO": 0,
- "PETROLEO WTI": 0,
+ "PETROLEO WTI": 1,
  "PLATA": -1,
  "PLATINO": 0
 }
