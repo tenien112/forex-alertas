@@ -1,12 +1,12 @@
 import sys, json
 import numpy as np, pandas as pd, yfinance as yf, requests
-# Mismos mercados e indicadores que el RADAR CAMBIO TENDENCIAS, pero en M5, M15, M30 y H1
+# Mismos mercados e indicadores que el RADAR CAMBIO TENDENCIAS, pero en M15, M30 y H1
 from alertas_forex import PARES, COMMODITIES, NOMBRES, TEMA, indicadores, indicadores_serie, estado, cerradas
 
-TFS = ["M5", "M15", "M30", "H1"]
-MINS = {"M5": 5, "M15": 15, "M30": 30, "H1": 60}
+TFS = ["M15", "M30", "H1"]
+MINS = {"M15": 15, "M30": 30, "H1": 60}
 ESTADO = "estado_radar_rapido.json"
-NOMBRE = "VIGILANTE RADAR M5-M15-M30-H1"
+NOMBRE = "VIGILANTE RADAR M15-M30-H1"
 
 def signo(e): return "+" if e == 1 else "-" if e == -1 else "."
 
@@ -15,19 +15,18 @@ def main():
     madrid = ahora.tz_convert("Europe/Madrid")
     if madrid.weekday() >= 5 and "--prueba" not in sys.argv:
         print("Fin de semana (hora de Madrid): no se vigila."); return
-    T = ahora.floor("5min")                 # último cierre de M5
+    T = ahora.floor("15min")                # último cierre de M15
     P = T - pd.Timedelta(minutes=30)        # situación en la revisión anterior (cada 30 min)
     datos = {}
     for par, t in PARES.items():
         try:
-            m5 = yf.download(t, period="30d", interval="5m", progress=False, auto_adjust=False)
             m15 = yf.download(t, period="60d", interval="15m", progress=False, auto_adjust=False)
             m30 = yf.download(t, period="60d", interval="30m", progress=False, auto_adjust=False)
             h1 = yf.download(t, period="200d", interval="1h", progress=False, auto_adjust=False)
         except Exception as ex:
             print(f"Error descargando {par}: {ex}"); continue
         ds = {}
-        for tf, d in zip(TFS, (m5, m15, m30, h1)):
+        for tf, d in zip(TFS, (m15, m30, h1)):
             if isinstance(d.columns, pd.MultiIndex): d.columns = d.columns.get_level_values(0)
             if len(d) == 0: break
             ds[tf] = d.tz_convert("UTC")["Close"].dropna()
@@ -36,13 +35,13 @@ def main():
         datos[par] = ds
 
     def desde_cuando(par, combo, hasta):
-        # Busca la vela M5 desde la que el signo de M5, M15, M30 y H1 es el mismo que ahora
+        # Busca la vela M15 desde la que el signo de M15, M30 y H1 es el mismo que ahora
         estados = {}
         for tf in TFS:
             s = datos[par][tf]
             st = pd.Series(indicadores_serie(s.values), index=s.index + pd.Timedelta(minutes=MINS[tf]))
             estados[tf] = st[st.index <= hasta]
-        cierres = estados["M5"].index
+        cierres = estados["M15"].index
         if len(cierres) == 0: return None
         gs = np.ones(len(cierres), dtype=bool); vals = {}
         for tf in TFS:
@@ -94,7 +93,7 @@ def main():
             if g_now != 0:
                 avisos.append((("ALCISTA " if g_now == 1 else "BAJISTA ") + par,
                                f"{'🟢' if g_now == 1 else '🔴'} {par} {'ALCISTA' if g_now == 1 else 'BAJISTA'}: los 4 indicadores "
-                               f"{'positivos' if g_now == 1 else 'negativos'} en las 4 temporalidades (M5, M15, M30 y H1)"))
+                               f"{'positivos' if g_now == 1 else 'negativos'} en las 3 temporalidades (M15, M30 y H1)"))
 
     resumen.sort(key=lambda l: (l.split(":")[0] in COMMODITIES, l.split(":")[0]))
     i = next((n for n, l in enumerate(resumen) if l.split(":")[0] in COMMODITIES), None)
