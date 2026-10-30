@@ -1,6 +1,6 @@
 {
  "EUR/USD": 0,
- "EUR/GBP": -1,
+ "EUR/GBP": 0,
  "EUR/JPY": 0,
  "GBP/USD": 0,
  "USD/JPY": 0,
@@ -12,7 +12,7 @@
  "GBP/AUD": 0,
  "GBP/CAD": 0,
  "PETROLEO WTI": 1,
- "ORO": 0,
+ "ORO": -1,
  "USD/CNH": -1,
  "USD/CHF": 0,
  "EUR/CHF": 0,
