@@ -1,12 +1,12 @@
 import sys, json
 import numpy as np, pandas as pd, yfinance as yf, requests
-# Mismos mercados e indicadores que el RADAR CAMBIO TENDENCIAS, pero en M15, M30 y H1
+# Mismos mercados e indicadores que el RADAR CAMBIO TENDENCIAS, pero en M15, M30, H1 y H2
 from alertas_forex import PARES, COMMODITIES, NOMBRES, TEMA, indicadores, indicadores_serie, estado, cerradas, rangos_recencia, marca
 
-TFS = ["M15", "M30", "H1"]
-MINS = {"M15": 15, "M30": 30, "H1": 60}
+TFS = ["M15", "M30", "H1", "H2"]
+MINS = {"M15": 15, "M30": 30, "H1": 60, "H2": 120}
 ESTADO = "estado_radar_rapido.json"
-NOMBRE = "VIGILANTE RADAR M15-M30-H1"
+NOMBRE = "VIGILANTE RADAR M15-M30-H1-H2"
 
 def signo(e): return "+" if e == 1 else "-" if e == -1 else "."
 
@@ -26,16 +26,18 @@ def main():
         except Exception as ex:
             print(f"Error descargando {par}: {ex}"); continue
         ds = {}
-        for tf, d in zip(TFS, (m15, m30, h1)):
+        for tf, d in zip(TFS[:3], (m15, m30, h1)):
             if isinstance(d.columns, pd.MultiIndex): d.columns = d.columns.get_level_values(0)
             if len(d) == 0: break
             ds[tf] = d.tz_convert("UTC")["Close"].dropna()
+        if "H1" in ds:
+            ds["H2"] = ds["H1"].resample("2h", origin="epoch", label="left", closed="left").last().dropna()
         if len(ds) < len(TFS):
             print(f"Sin datos para {par}, se omite"); continue
         datos[par] = ds
 
     def desde_cuando(par, combo, hasta):
-        # Busca la vela M15 desde la que el signo de M15, M30 y H1 es el mismo que ahora
+        # Busca la vela M15 desde la que el signo de M15, M30, H1 y H2 es el mismo que ahora
         estados = {}
         for tf in TFS:
             s = datos[par][tf]
@@ -94,7 +96,7 @@ def main():
             if g_now != 0:
                 avisos.append((("ALCISTA " if g_now == 1 else "BAJISTA ") + par,
                                f"{'🟢' if g_now == 1 else '🔴'} {par} {'ALCISTA' if g_now == 1 else 'BAJISTA'}: los 4 indicadores "
-                               f"{'positivos' if g_now == 1 else 'negativos'} en las 3 temporalidades (M15, M30 y H1)"))
+                               f"{'positivos' if g_now == 1 else 'negativos'} en las 4 temporalidades (M15, M30, H1 y H2)"))
 
     resumen.sort(key=lambda l: (l.split(":")[0] in COMMODITIES, l.split(":")[0]))
     i = next((n for n, l in enumerate(resumen) if l.split(":")[0] in COMMODITIES), None)
