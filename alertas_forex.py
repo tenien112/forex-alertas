@@ -77,6 +77,15 @@ def rangos_recencia(vals, combo, tfs):
     orden = sorted(set(inicio.values()), reverse=True)
     return {tf: orden.index(inicio[tf]) + 1 for tf in tfs}
 
+def cadena(items):
+    # items: [(texto, rango)] con rango 1 = más reciente. Ordena del más antiguo al más reciente unidos con flechas
+    con = [(t, n) for t, n in items if n]; sin = [t for t, n in items if not n]
+    if not con: return " ".join(t for t, n in items)
+    grupos = []
+    for n in sorted({n for t, n in con}, reverse=True):
+        grupos.append(" ".join(marca(t, n) for t, m in con if m == n))
+    return " → ".join(grupos) + ("" if not sin else " " + " ".join(sin))
+
 def marca(t, n):
     # Corchetes según antigüedad: [X] la más reciente, [[X]] la anterior, [[[X]]] la más antigua (la app lo pinta como subrayado fino → grueso)
     return "[" * n + t + "]" * n if n else t
@@ -164,7 +173,7 @@ def main():
             if d: texto_desde = (" antes" if d[0] == "antes del" else "") + f" {d[1].tz_convert('Europe/Madrid'):%d/%m %H:%M}"
         except Exception as ex:
             print(f"No se pudo calcular desde cuándo para {par}: {ex}")
-        resumen.append(f"{bonito(par)}: " + " ".join(marca(f"{tf}{'+' if e_now[tf]==1 else '-' if e_now[tf]==-1 else '.'}", cambiadas.get(tf, 0)) for tf in TFS)
+        resumen.append(f"{bonito(par)}: " + cadena([(f"{tf}{'+' if e_now[tf]==1 else '-' if e_now[tf]==-1 else '.'}", cambiadas.get(tf, 0)) for tf in TFS])
                        + (" ALCISTA" if g_now == 1 else " BAJISTA" if g_now == -1 else "") + texto_desde)
         if g_now != g_prev:
             if g_prev != 0:
