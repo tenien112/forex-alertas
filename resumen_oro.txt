@@ -1,14 +1,14 @@
-ORO: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+ORO: baja ⬇️. El sistema está en CORTO desde el 30/10 01:30 a 4023.70. Si no entraste, no entres ahora: espera al próximo aviso.
 
 PLATA: baja ⬇️. El sistema está en CORTO desde el 29/10 07:00 a 52.845. Si no entraste, no entres ahora: espera al próximo aviso.
 
 BITCOIN: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-PETRÓLEO WTI: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+PETRÓLEO WTI: sube ⬆️. El sistema está en LARGO desde el 29/10 21:00 a 102.76. Si no entraste, no entres ahora: espera al próximo aviso.
 
 EUR/USD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-EUR/GBP: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+EUR/GBP: baja ⬇️. El sistema está en CORTO desde el 30/10 09:00 a 0.83477. Si no entraste, no entres ahora: espera al próximo aviso.
 
 EUR/JPY: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
@@ -16,21 +16,21 @@ GBP/USD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 USD/CNH: baja ⬇️. El sistema está en CORTO desde el 28/10 20:30 a 6.66158. Si no entraste, no entres ahora: espera al próximo aviso.
 
-EUR/CNH: baja ⬇️. El sistema está en CORTO desde el 29/10 07:00 a 7.41471. Si no entraste, no entres ahora: espera al próximo aviso.
+EUR/CNH: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 USD/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 GBP/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-EUR/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+EUR/CHF: baja ⬇️. El sistema está en CORTO desde el 29/10 23:00 a 0.92097. Si no entraste, no entres ahora: espera al próximo aviso.
 
 USD/JPY: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-EUR/CAD: baja ⬇️. El sistema está en CORTO desde el 28/10 21:30 a 1.56086. Si no entraste, no entres ahora: espera al próximo aviso.
+EUR/CAD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-EUR/AUD: baja ⬇️. El sistema está en CORTO desde el 26/10 11:00 a 1.59228. Si no entraste, no entres ahora: espera al próximo aviso.
+EUR/AUD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-GBP/CAD: baja ⬇️. El sistema está en CORTO desde el 28/10 08:00 a 1.86701. Si no entraste, no entres ahora: espera al próximo aviso.
+GBP/CAD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 GBP/AUD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
