@@ -79,16 +79,21 @@ jobs:
           else
             python vigilante_radar_forex.py || (sleep 30 && python vigilante_radar_forex.py)
           fi
+      - name: Ejecutar vigilante RADAR M5-M15-M30-H1 (mismos mercados que el RADAR CAMBIO TENDENCIAS)
+        if: github.event_name == 'schedule' || github.event.inputs.prueba != 'true'
+        continue-on-error: true
+        run: python vigilante_radar_rapido.py || (sleep 30 && python vigilante_radar_rapido.py)
       - name: Guardar hora del último aviso
         if: always()
         run: |
-          if [ -n "$(git status --porcelain estado_oro.json estado_forex.json estado_commodities.json estado_radar_commodities.json estado_radar_forex.json)" ]; then
+          if [ -n "$(git status --porcelain estado_oro.json estado_forex.json estado_commodities.json estado_radar_commodities.json estado_radar_forex.json estado_radar_rapido.json)" ]; then
             git config user.name "vigilante-oro"
             git config user.email "vigilante-oro@users.noreply.github.com"
             git add estado_oro.json estado_forex.json
             [ -f estado_commodities.json ] && git add estado_commodities.json
             [ -f estado_radar_commodities.json ] && git add estado_radar_commodities.json
             [ -f estado_radar_forex.json ] && git add estado_radar_forex.json
+            [ -f estado_radar_rapido.json ] && git add estado_radar_rapido.json
             git commit -m "Vigilantes: guardar último estado"
             git pull --rebase origin main && git push origin HEAD:main
           fi
