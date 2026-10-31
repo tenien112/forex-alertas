@@ -43,3 +43,15 @@ jobs:
             git commit -m "Vigilante COMMODITIES RADAR 5 TEMPORALIDADES 2 SALIDAS: último aviso"
             git pull --rebase origin main && git push origin HEAD:main
           fi
+      - name: Guardar velas para el gráfico de la app BOLSA
+        if: github.event.inputs.prueba == 'true'
+        continue-on-error: true
+        run: |
+          python velas.py
+          git config user.name "vigilante-velas"
+          git config user.email "vigilante-velas@users.noreply.github.com"
+          git add velas
+          if ! git diff --cached --quiet; then
+            git commit -m "Velas para el gráfico de la app"
+            git pull --rebase -X theirs origin main && git push origin HEAD:main
+          fi
