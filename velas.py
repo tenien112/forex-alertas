@@ -23,7 +23,7 @@ def limpia(d):
 
 def a_lista(d):
     d = d.tail(MAX_VELAS)
-    t = (d.index.astype("int64") // 10**9).tolist()
+    t = ((d.index - pd.Timestamp("1970-01-01", tz="UTC")) // pd.Timedelta("1s")).tolist()
     return [[int(a)] + [float(f"{x:.6g}") for x in fila] for a, fila in zip(t, d.values.tolist())]
 
 def main():
