@@ -11,13 +11,7 @@ NOMBRE = "VIGILANTE RADAR M5-M30-H1-H2-H4"
 
 def signo(e): return "+" if e == 1 else "-" if e == -1 else "."
 
-def main():
-    ahora = pd.Timestamp.now(tz="UTC")
-    madrid = ahora.tz_convert("Europe/Madrid")
-    if madrid.weekday() >= 5 and "--prueba" not in sys.argv:
-        print("Fin de semana (hora de Madrid): no se vigila."); return
-    T = ahora.floor("5min")                 # último cierre de M5
-    P = T - pd.Timedelta(minutes=30)        # situación en la revisión anterior (cada 30 min)
+def descargar_datos():
     datos = {}
     for par, t in PARES.items():
         try:
@@ -37,6 +31,17 @@ def main():
         if len(ds) < len(TFS):
             print(f"Sin datos para {par}, se omite"); continue
         datos[par] = ds
+
+    return datos
+
+def main():
+    ahora = pd.Timestamp.now(tz="UTC")
+    madrid = ahora.tz_convert("Europe/Madrid")
+    if madrid.weekday() >= 5 and "--prueba" not in sys.argv:
+        print("Fin de semana (hora de Madrid): no se vigila."); return
+    T = ahora.floor("5min")                 # último cierre de M5
+    P = T - pd.Timedelta(minutes=30)        # situación en la revisión anterior (cada 30 min)
+    datos = descargar_datos()
 
     def desde_cuando(par, combo, hasta):
         # Busca la vela M5 desde la que el signo de todas las temporalidades es el mismo que ahora

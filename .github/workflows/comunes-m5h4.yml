@@ -1,0 +1,45 @@
+name: Vigilante COMUNES M5-H4
+
+on:
+  # Prueba manual del aviso COMUNES M5-H4 (el automático va cada 30 min dentro de vigilante.yml)
+  workflow_dispatch:
+    inputs:
+      prueba:
+        description: "Enviar aviso de prueba con las coincidencias actuales"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vigilante
+  cancel-in-progress: false
+
+jobs:
+  vigilar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Ejecutar vigilante COMUNES M5-H4
+        run: |
+          if [ "${{ github.event.inputs.prueba }}" = "true" ]; then
+            python vigilante_comunes_m5h4.py --prueba || (sleep 30 && python vigilante_comunes_m5h4.py --prueba)
+          else
+            python vigilante_comunes_m5h4.py || (sleep 30 && python vigilante_comunes_m5h4.py)
+          fi
+      - name: Guardar coincidencias
+        run: |
+          if [ -n "$(git status --porcelain estado_comunes_m5h4.json)" ]; then
+            git config user.name "vigilante-comunes-m5h4"
+            git config user.email "vigilante-comunes-m5h4@users.noreply.github.com"
+            git add estado_comunes_m5h4.json
+            git commit -m "Vigilante COMUNES M5-H4: coincidencias"
+            git pull --rebase origin main && git push origin HEAD:main
+          fi

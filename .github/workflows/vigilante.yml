@@ -7,8 +7,6 @@ on:
     # Cada 30 minutos (minutos 3 y 33 UTC), de domingo a viernes UTC.
     # El FOREX solo se vigila de lunes a viernes (hora de Madrid); el oro abre el domingo noche.
     - cron: "3,33 * * * 0-5"
-    # Resumen diario ORO y PLATA de lunes a viernes, sobre las 9 de Madrid
-    - cron: "45 7 * * 1-5"
   workflow_dispatch:
     inputs:
       prueba:
@@ -26,7 +24,7 @@ concurrency:
 jobs:
   vigilar:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -34,17 +32,17 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Ejecutar vigilante FOREX
-        if: github.event.schedule != '45 7 * * 1-5'
-        run: |
-          if [ "${{ github.event.inputs.prueba }}" = "true" ]; then
-            python alertas_forex.py --prueba || (sleep 30 && python alertas_forex.py --prueba)
-          else
-            python alertas_forex.py || (sleep 30 && python alertas_forex.py)
-          fi
+      # 01/11/2026: Lorenzo pidió quitar todos los avisos automáticos menos COMUNES M5-H4.
+      # Los demás vigilantes solo se ejecutan a mano (modo prueba, desde la app BOLSA).
+      - name: Ejecutar vigilante FOREX (solo a mano, modo prueba)
+        if: github.event.inputs.prueba == 'true'
+        run: python alertas_forex.py --prueba || (sleep 30 && python alertas_forex.py --prueba)
+      - name: Ejecutar vigilante COMUNES M5-H4 (único aviso automático)
+        if: github.event.inputs.prueba != 'true'
+        run: python vigilante_comunes_m5h4.py || (sleep 30 && python vigilante_comunes_m5h4.py)
       - name: Ejecutar vigilante ORO y PLATA
         # También cuando lo lanza el despertador externo (cron-job.org) sin modo prueba
-        if: github.event_name == 'schedule' || github.event.inputs.prueba != 'true'
+        if: false   # avisos automáticos desactivados el 01/11/2026
         continue-on-error: true
         run: |
           if [ "${{ github.event.schedule }}" = "45 7 * * 1-5" ]; then
@@ -53,7 +51,7 @@ jobs:
             python vigilante_oro.py || (sleep 30 && python vigilante_oro.py)
           fi
       - name: Ejecutar vigilante BOT COMMODITIES (metales, petróleo y criptos en H1-H8)
-        if: github.event_name == 'schedule' || github.event.inputs.prueba != 'true'
+        if: false   # avisos automáticos desactivados el 01/11/2026
         continue-on-error: true
         run: |
           if [ "${{ github.event.schedule }}" = "45 7 * * 1-5" ]; then
@@ -62,7 +60,7 @@ jobs:
             python vigilante_commodities.py || (sleep 30 && python vigilante_commodities.py)
           fi
       - name: Ejecutar vigilante COMMODITIES RADAR 5 TEMPORALIDADES 2 SALIDAS (metales, petróleo y criptos en M30-H8)
-        if: github.event_name == 'schedule' || github.event.inputs.prueba != 'true'
+        if: false   # avisos automáticos desactivados el 01/11/2026
         continue-on-error: true
         run: |
           if [ "${{ github.event.schedule }}" = "45 7 * * 1-5" ]; then
@@ -71,7 +69,7 @@ jobs:
             python vigilante_radar_commodities.py || (sleep 30 && python vigilante_radar_commodities.py)
           fi
       - name: Ejecutar vigilante FOREX RADAR 5 TEMPORALIDADES 2 SALIDAS (divisas en M30-H8)
-        if: github.event_name == 'schedule' || github.event.inputs.prueba != 'true'
+        if: false   # avisos automáticos desactivados el 01/11/2026
         continue-on-error: true
         run: |
           if [ "${{ github.event.schedule }}" = "45 7 * * 1-5" ]; then
@@ -80,13 +78,13 @@ jobs:
             python vigilante_radar_forex.py || (sleep 30 && python vigilante_radar_forex.py)
           fi
       - name: Ejecutar vigilante RADAR M5-M15-M30-H1-H2-H4 (mismos mercados que el RADAR CAMBIO TENDENCIAS)
-        if: github.event_name == 'schedule' || github.event.inputs.prueba != 'true'
+        if: false   # avisos automáticos desactivados el 01/11/2026
         continue-on-error: true
         run: python vigilante_radar_rapido.py || (sleep 30 && python vigilante_radar_rapido.py)
       - name: Guardar hora del último aviso
         if: always()
         run: |
-          if [ -n "$(git status --porcelain estado_oro.json estado_forex.json estado_commodities.json estado_radar_commodities.json estado_radar_forex.json estado_radar_rapido.json)" ]; then
+          if [ -n "$(git status --porcelain estado_oro.json estado_forex.json estado_commodities.json estado_radar_commodities.json estado_radar_forex.json estado_radar_rapido.json estado_comunes_m5h4.json)" ]; then
             git config user.name "vigilante-oro"
             git config user.email "vigilante-oro@users.noreply.github.com"
             git add estado_oro.json estado_forex.json
@@ -94,6 +92,7 @@ jobs:
             [ -f estado_radar_commodities.json ] && git add estado_radar_commodities.json
             [ -f estado_radar_forex.json ] && git add estado_radar_forex.json
             [ -f estado_radar_rapido.json ] && git add estado_radar_rapido.json
+            [ -f estado_comunes_m5h4.json ] && git add estado_comunes_m5h4.json
             git commit -m "Vigilantes: guardar último estado"
             git pull --rebase origin main && git push origin HEAD:main
           fi
