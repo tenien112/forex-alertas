@@ -1,4 +1,4 @@
-EUR/USD: M30+ H1. H2. H4- H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+EUR/USD: M30+ H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 EUR/GBP: M30. H1. H2- H4- H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
@@ -10,17 +10,17 @@ USD/JPY: M30+ H1. H2. H4. H8. sin dirección clara. No hay nada abierto. Espera 
 
 GBP/JPY: M30+ H1+ H2+ H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-EUR/AUD: M30. H1. H2. H4- H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+EUR/AUD: M30. H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 EUR/CAD: M30. H1. H2. H4- H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 AUD/USD: M30. H1. H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-USD/CAD: M30. H1- H2- H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+USD/CAD: M30. H1. H2- H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 GBP/AUD: M30+ H1+ H2+ H4+ H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-GBP/CAD: M30. H1. H2. H4- H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+GBP/CAD: M30. H1. H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 USD/CNH: M30- H1- H2- H4- H8- BAJISTA ⬇️. El sistema está en CORTO desde el 20/10 18:00 a 6.67430. Si no entraste, no entres ahora: espera al próximo aviso.
 
