@@ -18,7 +18,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: vigilante
+  group: ${{ github.workflow }}
   cancel-in-progress: false
 
 jobs:
@@ -94,7 +94,7 @@ jobs:
             [ -f estado_radar_rapido.json ] && git add estado_radar_rapido.json
             [ -f estado_comunes_m5h4.json ] && git add estado_comunes_m5h4.json
             git commit -m "Vigilantes: guardar último estado"
-            git pull --rebase origin main && git push origin HEAD:main
+            for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push origin HEAD:main && break; sleep $((RANDOM % 5 + 2)); done
           fi
       - name: Guardar velas para el gráfico de la app BOLSA
         if: github.event.inputs.prueba == 'true'
@@ -106,5 +106,5 @@ jobs:
           git add velas
           if ! git diff --cached --quiet; then
             git commit -m "Velas para el gráfico de la app"
-            git pull --rebase -X theirs origin main && git push origin HEAD:main
+            for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push origin HEAD:main && break; sleep $((RANDOM % 5 + 2)); done
           fi

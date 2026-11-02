@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: vigilante
+  group: ${{ github.workflow }}
   cancel-in-progress: false
 
 jobs:
@@ -41,5 +41,5 @@ jobs:
             git config user.email "vigilante-comunes-m5h4@users.noreply.github.com"
             git add estado_comunes_m5h4.json
             git commit -m "Vigilante COMUNES M5-H4: coincidencias"
-            git pull --rebase origin main && git push origin HEAD:main
+            for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push origin HEAD:main && break; sleep $((RANDOM % 5 + 2)); done
           fi

@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: vigilante
+  group: ${{ github.workflow }}
   cancel-in-progress: false
 
 jobs:
@@ -41,7 +41,7 @@ jobs:
             git config user.email "vigilante-radar-m5h4@users.noreply.github.com"
             for f in estado_radar_m5h4.json; do [ -f "$f" ] && git add "$f"; done
             git commit -m "Vigilante RADAR M5-M30-H1-H2-H4: último aviso"
-            git pull --rebase origin main && git push origin HEAD:main
+            for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push origin HEAD:main && break; sleep $((RANDOM % 5 + 2)); done
           fi
       - name: Guardar velas para el gráfico de la app BOLSA
         if: github.event.inputs.prueba == 'true'
@@ -53,5 +53,5 @@ jobs:
           git add velas
           if ! git diff --cached --quiet; then
             git commit -m "Velas para el gráfico de la app"
-            git pull --rebase -X theirs origin main && git push origin HEAD:main
+            for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push origin HEAD:main && break; sleep $((RANDOM % 5 + 2)); done
           fi
