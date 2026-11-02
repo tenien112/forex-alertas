@@ -6,7 +6,7 @@ PLATINO: M30. H1- H2- H4- H8- sin dirección clara. El sistema está en CORTO de
 
 PALADIO: M30- H1- H2- H4- H8- BAJISTA ⬇️. El sistema está en CORTO desde el 21/10 05:00 a 1090.50. Si no entraste, no entres ahora: espera al próximo aviso.
 
-PETRÓLEO WTI: M30. H1. H2. H4+ H8+ sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+PETRÓLEO WTI: M30. H1. H2. H4. H8+ sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 BITCOIN: M30- H1- H2- H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
