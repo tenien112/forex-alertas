@@ -14,12 +14,12 @@
  "PETROLEO WTI": 0,
  "ORO": 0,
  "USD/CNH": -1,
- "USD/CHF": 0,
+ "USD/CHF": -1,
  "EUR/CHF": -1,
  "GBP/CHF": 0,
  "BITCOIN": 0,
  "PLATA": 0,
  "EUR/CNH": 0,
  "PALADIO": -1,
- "PLATINO": -1
+ "PLATINO": 0
 }
