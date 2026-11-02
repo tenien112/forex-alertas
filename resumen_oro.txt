@@ -1,6 +1,6 @@
-ORO: baja ⬇️. El sistema está en CORTO desde el 30/10 02:00 a 4019.20. Si no entraste, no entres ahora: espera al próximo aviso.
+ORO: baja ⬇️. El sistema está en CORTO desde el 30/10 01:30 a 4023.70. Si no entraste, no entres ahora: espera al próximo aviso.
 
-PLATA: baja ⬇️. El sistema está en CORTO desde el 29/10 07:00 a 52.845. Si no entraste, no entres ahora: espera al próximo aviso.
+PLATA: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 BITCOIN: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
@@ -22,7 +22,7 @@ USD/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 GBP/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-EUR/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+EUR/CHF: baja ⬇️. El sistema está en CORTO desde el 02/11 13:00 a 0.91936. Si no entraste, no entres ahora: espera al próximo aviso.
 
 USD/JPY: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
@@ -32,6 +32,6 @@ EUR/AUD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 GBP/CAD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-GBP/AUD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+GBP/AUD: sube ⬆️. El sistema está en LARGO desde el 02/11 15:00 a 1.91528. Si no entraste, no entres ahora: espera al próximo aviso.
 
 GBP/JPY: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
