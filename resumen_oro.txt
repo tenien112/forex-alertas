@@ -32,6 +32,6 @@ EUR/AUD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 GBP/CAD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-GBP/AUD: sube ⬆️. El sistema está en LARGO desde el 02/11 15:00 a 1.91528. Si no entraste, no entres ahora: espera al próximo aviso.
+GBP/AUD: sube ⬆️. El sistema está en LARGO desde el 02/11 14:00 a 1.91476. Si no entraste, no entres ahora: espera al próximo aviso.
 
 GBP/JPY: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
