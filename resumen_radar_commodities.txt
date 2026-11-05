@@ -1,13 +1,13 @@
-ORO: M30. H1. H2. H4- H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+ORO: M30+ H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 PLATA: M30. H1. H2. H4- H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 PLATINO: M30. H1. H2. H4- H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-PALADIO: M30. H1. H2. H4- H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+PALADIO: M30. H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-PETRÓLEO WTI: M30- H1- H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+PETRÓLEO WTI: M30. H1- H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-BITCOIN: M30. H1. H2. H4- H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+BITCOIN: M30. H1. H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-ETHEREUM: M30+ H1. H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+ETHEREUM: M30. H1. H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
