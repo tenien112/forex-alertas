@@ -22,7 +22,7 @@ USD/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 GBP/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-EUR/CHF: baja ⬇️. El sistema está en CORTO desde el 05/11 03:00 a 0.91634. Si no entraste, no entres ahora: espera al próximo aviso.
+EUR/CHF: baja ⬇️. El sistema está en CORTO desde el 05/11 16:30 a 0.91458. Si no entraste, no entres ahora: espera al próximo aviso.
 
 USD/JPY: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
@@ -32,6 +32,6 @@ EUR/AUD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 GBP/CAD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-GBP/AUD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+GBP/AUD: sube ⬆️. El sistema está en LARGO desde el 05/11 16:30 a 1.93382. Si no entraste, no entres ahora: espera al próximo aviso.
 
 GBP/JPY: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
