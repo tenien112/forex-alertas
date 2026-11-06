@@ -2,7 +2,7 @@ ORO: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 PLATA: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-BITCOIN: baja ⬇️. El sistema está en CORTO desde el 06/11 01:30 a 76083.92. Si no entraste, no entres ahora: espera al próximo aviso.
+BITCOIN: baja ⬇️. El sistema está en CORTO desde el 05/11 23:30 a 75987.86. Si no entraste, no entres ahora: espera al próximo aviso.
 
 PETRÓLEO WTI: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
@@ -22,7 +22,7 @@ USD/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 GBP/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-EUR/CHF: baja ⬇️. El sistema está en CORTO desde el 05/11 23:30 a 0.91464. Si no entraste, no entres ahora: espera al próximo aviso.
+EUR/CHF: baja ⬇️. El sistema está en CORTO desde el 05/11 23:30 a 0.91477. Si no entraste, no entres ahora: espera al próximo aviso.
 
 USD/JPY: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
