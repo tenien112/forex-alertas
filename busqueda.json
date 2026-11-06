@@ -1,1 +1,1 @@
-{"id":"1793993333382","q":"INDITEX","hora":1793993350,"ok":true,"alternativas":[{"ticker":"ITX.MC","nombre":"INDITEX","tipo":"","bolsa":""}],"sim":"B_ITX_MC","ticker":"ITX.MC","nombre":"INDITEX","tipo":"","bolsa":"","tv":"BME:ITX"}
+{"id":"prueba3","q":"=DIA.MC","hora":1793993613,"ok":true,"alternativas":[{"ticker":"DIA.MC","nombre":"DIA (Supermercados DIA)","tipo":"Acción","bolsa":"Madrid"}],"sim":"B_DIA_MC","ticker":"DIA.MC","nombre":"DIA (Supermercados DIA)","tipo":"Acción","bolsa":"Madrid","tv":"BME:DIA"}
