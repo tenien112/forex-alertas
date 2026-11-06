@@ -1,0 +1,46 @@
+name: BUSCAR VALOR (app BOLSA)
+
+on:
+  workflow_dispatch:
+    inputs:
+      q:
+        description: "Valor a buscar (par, acción, índice, materia prima, cripto). Con = delante, ticker de Yahoo exacto"
+        type: string
+        required: true
+      id:
+        description: "Identificador de la búsqueda (lo pone la app)"
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: buscar-valor
+  cancel-in-progress: true
+
+jobs:
+  buscar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Buscar y guardar velas
+        env:
+          Q: ${{ github.event.inputs.q }}
+          ID: ${{ github.event.inputs.id }}
+        run: python buscar.py "$Q" "$ID" || (sleep 15 && python buscar.py "$Q" "$ID")
+      - name: Subir resultado
+        run: |
+          git config user.name "buscar-valor"
+          git config user.email "buscar-valor@users.noreply.github.com"
+          git add busqueda.json velas
+          if ! git diff --cached --quiet; then
+            git commit -m "BUSCAR VALOR: $(jq -r .q busqueda.json)"
+            for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push origin HEAD:main && break; sleep $((RANDOM % 5 + 2)); done
+          fi
