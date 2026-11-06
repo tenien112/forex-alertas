@@ -13,6 +13,11 @@ ALIAS = {
     "BITCOIN": "BTC-USD", "ETHEREUM": "ETH-USD", "SOLANA": "SOL-USD", "XRP": "XRP-USD",
     "IBEX": "^IBEX", "IBEX 35": "^IBEX", "IBEX35": "^IBEX", "SP500": "^GSPC", "S&P 500": "^GSPC", "S&P500": "^GSPC", "SP 500": "^GSPC",
     "NASDAQ": "^NDX", "NASDAQ 100": "^NDX", "DOW JONES": "^DJI", "DOW": "^DJI", "DAX": "^GDAXI", "CAC": "^FCHI", "CAC 40": "^FCHI",
+    "INDITEX": "ITX.MC", "ZARA": "ITX.MC", "BANCO SANTANDER": "SAN.MC", "SANTANDER": "SAN.MC", "CAIXABANK": "CABK.MC",
+    "SABADELL": "SAB.MC", "BANCO SABADELL": "SAB.MC", "BANKINTER": "BKT.MC", "UNICAJA": "UNI.MC", "MAPFRE": "MAP.MC",
+    "ENDESA": "ELE.MC", "NATURGY": "NTGY.MC", "AENA": "AENA.MC", "FERROVIAL": "FER.MC", "ACS": "ACS.MC", "IAG": "IAG.MC",
+    "AMADEUS": "AMS.MC", "GRIFOLS": "GRF.MC", "CELLNEX": "CLNX.MC", "ACCIONA": "ANA.MC", "REDEIA": "RED.MC", "INDRA": "IDR.MC",
+    "ARCELORMITTAL": "MTS.MC", "SACYR": "SCYR.MC", "MERLIN": "MRL.MC", "ROVI": "ROVI.MC", "SOLARIA": "SLR.MC", "PUIG": "PUIG.MC",
     "EUROSTOXX": "^STOXX50E", "EURO STOXX 50": "^STOXX50E", "FTSE": "^FTSE", "NIKKEI": "^N225", "VIX": "^VIX",
 }
 DIVISAS = "EUR USD GBP JPY CHF CAD AUD NZD CNH CNY MXN SEK NOK DKK PLN TRY ZAR HKD SGD".split()
@@ -39,16 +44,19 @@ def candidatos(q):
         for x in yf.Search(q, max_results=8, news_count=0).quotes:
             t = x.get("symbol")
             if not t: continue
-            sal.append((t, x.get("shortname") or x.get("longname") or t, TIPOS.get(x.get("quoteType", ""), x.get("quoteType", "")),
+            sal.append((t, x.get("longname") or x.get("shortname") or t, TIPOS.get(x.get("quoteType", ""), x.get("quoteType", "")),
                         x.get("exchDisp") or x.get("exchange") or ""))
     except Exception as ex:
         print("Búsqueda de Yahoo falló:", ex)
-    # Si la misma empresa cotiza en Madrid, primero la de Madrid (p. ej. Santander: SAN.MC antes que SAN de Nueva York)
-    if sal:
-        n0 = sal[0][1].upper()[:12]
-        for i, x in enumerate(sal):
-            if x[0].upper().endswith(".MC") and x[1].upper()[:12] == n0 and i:
-                sal.insert(0, sal.pop(i)); break
+    # Orden: primero Madrid, luego EE. UU. y las grandes bolsas europeas; futuros y mercados raros al final
+    pref = ["Madrid", "NASDAQ", "NYSE", "NYSEArca", "NYSE American", "XETRA", "Paris", "Amsterdam", "London", "Milan"]
+    def rango(x):
+        t, n, ti, b = x
+        if ti == "Futuro" or t.endswith("=F"): return 50
+        for i, p in enumerate(pref):
+            if b.startswith(p): return i
+        return 20
+    sal = sorted(sal, key=rango)   # sorted es estable: dentro del mismo rango, el orden de Yahoo
     if not sal:
         sal = [(q.strip().upper(), q.strip().upper(), "", "")]   # probar el texto tal cual como ticker
     return sal
