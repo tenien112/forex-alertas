@@ -1,0 +1,50 @@
+name: BUSCAR VALOR - lista (app BOLSA)
+
+# Paso rápido: solo saca la lista de valores que cumplen lo escrito (sin instalar nada ni descargar velas)
+on:
+  workflow_dispatch:
+    inputs:
+      q:
+        description: "Texto buscado"
+        type: string
+        required: true
+      id:
+        description: "Identificador de la búsqueda (lo pone la app)"
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: buscar-lista
+  cancel-in-progress: true
+
+jobs:
+  lista:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            catalogo.py
+            lista.py
+          sparse-checkout-cone-mode: false
+      - name: Buscar
+        env:
+          Q: ${{ github.event.inputs.q }}
+          ID: ${{ github.event.inputs.id }}
+        run: python3 lista.py "$Q" "$ID"
+      - name: Subir lista
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          B64=$(base64 -w0 lista.json)
+          for i in 1 2 3 4 5; do
+            SHA=$(gh api "repos/${{ github.repository }}/contents/lista.json" --jq .sha 2>/dev/null || true)
+            if [ -n "$SHA" ]; then A="-f sha=$SHA"; else A=""; fi
+            gh api -X PUT "repos/${{ github.repository }}/contents/lista.json" -f message="BUSCAR VALOR lista: $(jq -r .q lista.json)" -f content="$B64" $A >/dev/null && break
+            sleep 2
+          done
