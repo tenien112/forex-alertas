@@ -43,8 +43,8 @@ jobs:
         run: |
           B64=$(base64 -w0 lista.json)
           for i in 1 2 3 4 5; do
-            SHA=$(gh api "repos/${{ github.repository }}/contents/lista.json" --jq .sha 2>/dev/null || true)
-            if [ -n "$SHA" ]; then A="-f sha=$SHA"; else A=""; fi
-            gh api -X PUT "repos/${{ github.repository }}/contents/lista.json" -f message="BUSCAR VALOR lista: $(jq -r .q lista.json)" -f content="$B64" $A >/dev/null && break
+            A=()
+            if SHA=$(gh api "repos/${{ github.repository }}/contents/lista.json" --jq .sha 2>/dev/null); then A=(-f "sha=$SHA"); fi
+            gh api -X PUT "repos/${{ github.repository }}/contents/lista.json" -f "message=BUSCAR VALOR lista" -f "content=$B64" "${A[@]}" >/dev/null && break
             sleep 2
           done
