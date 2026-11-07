@@ -1,1 +1,1 @@
-{"id":"1794049125204","q":"=SAN.MC","hora":1794049141,"ok":true,"alternativas":[{"ticker":"SAN.MC","nombre":"Banco Santander","tipo":"Acción","bolsa":"Madrid"}],"sim":"B_SAN_MC","ticker":"SAN.MC","nombre":"Banco Santander","tipo":"Acción","bolsa":"Madrid","tv":"BME:SAN"}
+{"id":"1794049894640","q":"=^IBEX","hora":1794049917,"ok":true,"alternativas":[{"ticker":"^IBEX","nombre":"IBEX 35","tipo":"Índice","bolsa":"Madrid"}],"sim":"B__IBEX","ticker":"^IBEX","nombre":"IBEX 35","tipo":"Índice","bolsa":"Madrid","tv":"BME:IBC"}
