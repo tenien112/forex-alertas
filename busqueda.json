@@ -1,1 +1,1 @@
-{"id":"1794049894640","q":"=^IBEX","hora":1794049917,"ok":true,"alternativas":[{"ticker":"^IBEX","nombre":"IBEX 35","tipo":"Índice","bolsa":"Madrid"}],"sim":"B__IBEX","ticker":"^IBEX","nombre":"IBEX 35","tipo":"Índice","bolsa":"Madrid","tv":"BME:IBC"}
+{"id":"1794049950067","q":"=IBE.MC","hora":1794049975,"ok":true,"alternativas":[{"ticker":"IBE.MC","nombre":"Iberdrola","tipo":"Acción","bolsa":"Madrid"}],"sim":"B_IBE_MC","ticker":"IBE.MC","nombre":"Iberdrola","tipo":"Acción","bolsa":"Madrid","tv":"BME:IBE"}
