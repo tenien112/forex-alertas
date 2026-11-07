@@ -1,1 +1,1 @@
-{"id":"1794049023397","q":"=CL=F","hora":1794049042,"ok":true,"alternativas":[{"ticker":"CL=F","nombre":"Petróleo WTI","tipo":"Materia prima","bolsa":""}],"sim":"USOIL","ticker":"CL=F","nombre":"Petróleo WTI","tipo":"Materia prima","bolsa":"","tv":"TVC:USOIL"}
+{"id":"1794049125204","q":"=SAN.MC","hora":1794049141,"ok":true,"alternativas":[{"ticker":"SAN.MC","nombre":"Banco Santander","tipo":"Acción","bolsa":"Madrid"}],"sim":"B_SAN_MC","ticker":"SAN.MC","nombre":"Banco Santander","tipo":"Acción","bolsa":"Madrid","tv":"BME:SAN"}
