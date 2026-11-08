@@ -4,7 +4,7 @@
 # Uso: python buscar.py "texto buscado" ID      (si el texto empieza por "=" se usa tal cual como ticker de Yahoo)
 import sys, re, json, time
 import pandas as pd, yfinance as yf
-from velas import limpia, a_lista, cambios, AGRUPAR, MERCADOS
+from velas import limpia, a_lista, cambios, precio_giro, AGRUPAR, MERCADOS
 
 from catalogo import en_catalogo, divisa, TIPOS, rango, C
 
@@ -88,13 +88,17 @@ def main():
         series = descarga(t)
         if not series: continue
         sim = nombre_archivo(t)
-        sal = {"actualizado": ahora, "tf": {}, "radar": {}, "ticker": t, "nombre": n or t, "tv": simbolo_tv(t)}
+        sal = {"actualizado": ahora, "tf": {}, "radar": {}, "giro": {}, "ticker": t, "nombre": n or t, "tv": simbolo_tv(t)}
         for mins, d in series.items():
             sal["tf"][str(mins)] = a_lista(d)
         desde = min((v[0][0] for v in sal["tf"].values() if v), default=0)
         for mins, d in series.items():
             try: sal["radar"][str(mins)] = cambios(d, mins, ahora, desde)
             except Exception as ex: print(f"Sin radar {t} {mins}: {ex}")
+            try:
+                g = precio_giro(d, mins, ahora)
+                if g: sal["giro"][str(mins)] = g
+            except Exception as ex: print(f"Sin giro {t} {mins}: {ex}")
         with open(f"velas/{sim}.json", "w") as f:
             json.dump(sal, f, separators=(",", ":"))
         res.update({"ok": True, "sim": sim, "ticker": t, "nombre": n or t, "tipo": ti, "bolsa": b, "tv": sal["tv"]})
