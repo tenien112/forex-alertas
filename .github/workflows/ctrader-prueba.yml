@@ -1,0 +1,36 @@
+name: cTrader - prueba de conexión (app BOLSA)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ctrader-token
+  cancel-in-progress: false
+
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q websocket-client cryptography
+      - name: Probar cTrader
+        env:
+          CTRADER_CLIENT_SECRET: ${{ secrets.CTRADER_CLIENT_SECRET }}
+          CTRADER_REFRESH_TOKEN: ${{ secrets.CTRADER_REFRESH_TOKEN }}
+        run: python ctrader_api.py
+      - name: Guardar token renovado (cifrado)
+        if: always()
+        run: |
+          [ -f ctrader_token.enc ] || exit 0
+          git config user.name "ctrader-token"
+          git config user.email "ctrader-token@users.noreply.github.com"
+          git add ctrader_token.enc
+          git commit -m "cTrader: token renovado (cifrado)" || exit 0
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push origin HEAD:main && break; sleep 3; done
