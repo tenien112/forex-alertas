@@ -1,0 +1,57 @@
+name: Vigilante RADAR M5-M30-H1-H2
+
+on:
+  # Solo se lanza a mano desde la app BOLSA-LORENCITO
+  workflow_dispatch:
+    inputs:
+      prueba:
+        description: "Enviar aviso de prueba con el estado actual"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  vigilar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Ejecutar vigilante RADAR M5-M30-H1-H2
+        run: |
+          if [ "${{ github.event.inputs.prueba }}" = "true" ]; then
+            python vigilante_radar_m5h2.py --prueba || (sleep 30 && python vigilante_radar_m5h2.py --prueba)
+          else
+            python vigilante_radar_m5h2.py || (sleep 30 && python vigilante_radar_m5h2.py)
+          fi
+      - name: Guardar hora del último aviso
+        run: |
+          if [ -n "$(git status --porcelain estado_radar_m5h2.json)" ]; then
+            git config user.name "vigilante-radar-m5h2"
+            git config user.email "vigilante-radar-m5h2@users.noreply.github.com"
+            for f in estado_radar_m5h2.json; do [ -f "$f" ] && git add "$f"; done
+            git commit -m "Vigilante RADAR M5-M30-H1-H2: último aviso"
+            for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push origin HEAD:main && break; sleep $((RANDOM % 5 + 2)); done
+          fi
+      - name: Guardar velas para el gráfico de la app BOLSA
+        if: github.event.inputs.prueba == 'true'
+        continue-on-error: true
+        run: |
+          python velas.py
+          git config user.name "vigilante-velas"
+          git config user.email "vigilante-velas@users.noreply.github.com"
+          git add velas
+          if ! git diff --cached --quiet; then
+            git commit -m "Velas para el gráfico de la app"
+            for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push origin HEAD:main && break; sleep $((RANDOM % 5 + 2)); done
+          fi
