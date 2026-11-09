@@ -4,7 +4,7 @@ PLATA: M30+ H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el
 
 PLATINO: M30+ H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-PALADIO: M30+ H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+PALADIO: M30. H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 PETRÓLEO WTI: M30- H1- H2- H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
