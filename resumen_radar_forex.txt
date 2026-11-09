@@ -10,7 +10,7 @@ USD/JPY: M30. H1+ H2+ H4. H8. sin dirección clara. No hay nada abierto. Espera 
 
 GBP/JPY: M30. H1. H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-EUR/AUD: M30. H1+ H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+EUR/AUD: M30+ H1+ H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 EUR/CAD: M30+ H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
