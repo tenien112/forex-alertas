@@ -118,47 +118,47 @@ def main():
             except Exception as ex:
                 print(f"Error descargando {intervalo}: {ex}"); time.sleep(10)
     ahora = int(time.time())
+    os.makedirs("velas_ct", exist_ok=True)
     for nombre, t in MERCADOS.items():
-        sal = {"actualizado": ahora, "tf": {}, "radar": {}, "giro": {}, "fuente": "yahoo"}
+        # 1) Gráfico de siempre (Yahoo) -> velas/
         series = {}
-        if ct.get(nombre) and 60 in ct[nombre]:
-            sal["fuente"] = "ctrader"
-            for mins, d in ct[nombre].items():
-                series[mins] = d
-            d = ct[nombre][60]
-            for m2, regla in AGRUPAR:
-                series[m2] = d.resample(regla, origin="epoch", label="left", closed="left").agg(
-                    {"Open": "first", "High": "max", "Low": "min", "Close": "last"}).dropna()
-        for mins, df in ([] if sal["fuente"] == "ctrader" else bruto.items()):
+        for mins, df in bruto.items():
             try:
                 d = limpia(df[t])
             except Exception:
                 continue
             if len(d) == 0: continue
             series[mins] = d
-            if mins == 60:
-                for m2, regla in AGRUPAR:
-                    series[m2] = d.resample(regla, origin="epoch", label="left", closed="left").agg(
-                        {"Open": "first", "High": "max", "Low": "min", "Close": "last"}).dropna()
-        for mins, d in series.items():
-            sal["tf"][str(mins)] = a_lista(d)
-        # Desde la vela más antigua que se guarda (la de H8 suele ser la más lejana)
-        desde = min((v[0][0] for v in sal["tf"].values() if v), default=0)
-        for mins, d in series.items():
-            try:
-                sal["radar"][str(mins)] = cambios(d, mins, ahora, desde)
-            except Exception as ex:
-                print(f"Sin estados de radar para {nombre} {mins}: {ex}")
-            try:
-                g = precio_giro(d, mins, ahora)
-                if g: sal["giro"][str(mins)] = g
-            except Exception as ex:
-                print(f"Sin precio de giro para {nombre} {mins}: {ex}")
-        if not sal["tf"]:
-            print(f"Sin velas para {nombre}"); continue
-        with open(f"velas/{nombre}.json", "w") as f:
-            json.dump(sal, f, separators=(",", ":"))
-        print(f"{nombre} [{sal['fuente']}]: " + ", ".join(f"{k}={len(v)}/{len(sal['radar'].get(k, []))}" for k, v in sal["tf"].items()))
+        guarda(nombre, series, ahora, "yahoo", f"velas/{nombre}.json")
+        # 2) Gráfico de cTrader -> velas_ct/
+        if ct.get(nombre) and 60 in ct[nombre]:
+            guarda(nombre, dict(ct[nombre]), ahora, "ctrader", f"velas_ct/{nombre}.json")
+
+def guarda(nombre, series, ahora, fuente, ruta):
+    if 60 in series:
+        for m2, regla in AGRUPAR:
+            series[m2] = series[60].resample(regla, origin="epoch", label="left", closed="left").agg(
+                {"Open": "first", "High": "max", "Low": "min", "Close": "last"}).dropna()
+    sal = {"actualizado": ahora, "tf": {}, "radar": {}, "giro": {}, "fuente": fuente}
+    for mins, d in series.items():
+        sal["tf"][str(mins)] = a_lista(d)
+    # Desde la vela más antigua que se guarda (la de H8 suele ser la más lejana)
+    desde = min((v[0][0] for v in sal["tf"].values() if v), default=0)
+    for mins, d in series.items():
+        try:
+            sal["radar"][str(mins)] = cambios(d, mins, ahora, desde)
+        except Exception as ex:
+            print(f"Sin estados de radar para {nombre} {mins}: {ex}")
+        try:
+            g = precio_giro(d, mins, ahora)
+            if g: sal["giro"][str(mins)] = g
+        except Exception as ex:
+            print(f"Sin precio de giro para {nombre} {mins}: {ex}")
+    if not sal["tf"]:
+        print(f"Sin velas para {nombre} ({fuente})"); return
+    with open(ruta, "w") as f:
+        json.dump(sal, f, separators=(",", ":"))
+    print(f"{nombre} [{fuente}]: " + ", ".join(f"{k}={len(v)}/{len(sal['radar'].get(k, []))}" for k, v in sal["tf"].items()))
 
 if __name__ == "__main__":
     main()
