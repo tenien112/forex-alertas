@@ -2,6 +2,11 @@ name: cTrader - prueba de conexión (app BOLSA)
 
 on:
   workflow_dispatch:
+    inputs:
+      modo:
+        description: "vacío = prueba; simbolos = lista de símbolos"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -24,7 +29,7 @@ jobs:
         env:
           CTRADER_CLIENT_SECRET: ${{ secrets.CTRADER_CLIENT_SECRET }}
           CTRADER_REFRESH_TOKEN: ${{ secrets.CTRADER_REFRESH_TOKEN }}
-        run: python ctrader_api.py
+        run: python ctrader_api.py ${{ github.event.inputs.modo }}
       - name: Guardar token renovado (cifrado)
         if: always()
         run: |

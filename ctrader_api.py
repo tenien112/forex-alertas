@@ -145,6 +145,11 @@ def velas(c, cuenta, symbol_id, periodo, desde_ms, hasta_ms):
         time.sleep(0.3)   # para no pasar del límite de peticiones
     return [sal[k] for k in sorted(sal)]
 
+if __name__ == "__main__" and len(__import__("sys").argv) > 1 and __import__("sys").argv[1] == "simbolos":
+    access, _ = token(); c, cuenta, _ = conecta(access)
+    sim = simbolos(c, cuenta); c.cierra()
+    print("TODOS:", " | ".join(sorted(sim)))
+    raise SystemExit
 if __name__ == "__main__":
     # Prueba: conectar, listar cuentas y descargar EUR/USD H1 de los últimos 3 años
     access, renovado = token()
