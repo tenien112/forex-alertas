@@ -99,19 +99,27 @@ class CTrader:
         except Exception: pass
 
 def conecta(access, cuenta=None):
-    """Conecta, autentica la app y una cuenta. Devuelve (conexión, cuenta, lista de cuentas)."""
+    """Conecta y autentica la primera cuenta que funcione (o la indicada). Devuelve (conexión, cuenta, lista de cuentas)."""
     c = CTrader(live=False)
     c.pide(APP_AUTH, {"clientId": CLIENT_ID, "clientSecret": SECRET}, APP_AUTH_R)
     cuentas = c.pide(ACC_LIST, {"accessToken": access}, ACC_LIST_R).get("ctidTraderAccount", [])
+    print("Cuentas de tu cTrader ID:", [(a["ctidTraderAccountId"], "REAL" if a.get("isLive") else "DEMO",
+                                         a.get("brokerTitleShort", ""), a.get("traderLogin", "")) for a in cuentas])
     if not cuentas:
         raise RuntimeError("Tu cTrader ID no tiene ninguna cuenta autorizada para esta app")
-    elegida = next((a for a in cuentas if str(a["ctidTraderAccountId"]) == str(cuenta)), None) if cuenta else None
-    elegida = elegida or next((a for a in cuentas if not a.get("isLive")), cuentas[0])
-    if elegida.get("isLive"):
-        c.cierra(); c = CTrader(live=True)
-        c.pide(APP_AUTH, {"clientId": CLIENT_ID, "clientSecret": SECRET}, APP_AUTH_R)
-    c.pide(ACC_AUTH, {"ctidTraderAccountId": elegida["ctidTraderAccountId"], "accessToken": access}, ACC_AUTH_R)
-    return c, elegida, cuentas
+    orden = sorted(cuentas, key=lambda a: (str(a["ctidTraderAccountId"]) != str(cuenta), bool(a.get("isLive")),
+                                          -int(a["ctidTraderAccountId"])))
+    actual_live, ultimo = False, None
+    for a in orden:
+        if bool(a.get("isLive")) != actual_live:
+            c.cierra(); c = CTrader(live=bool(a.get("isLive"))); actual_live = bool(a.get("isLive"))
+            c.pide(APP_AUTH, {"clientId": CLIENT_ID, "clientSecret": SECRET}, APP_AUTH_R)
+        try:
+            c.pide(ACC_AUTH, {"ctidTraderAccountId": a["ctidTraderAccountId"], "accessToken": access}, ACC_AUTH_R)
+            return c, a, cuentas
+        except RuntimeError as ex:
+            print("Cuenta", a["ctidTraderAccountId"], "no vale:", ex); ultimo = ex
+    raise RuntimeError(f"Ninguna cuenta se pudo usar ({ultimo})")
 
 def simbolos(c, cuenta):
     r = c.pide(SYMBOLS, {"ctidTraderAccountId": cuenta["ctidTraderAccountId"]}, SYMBOLS_R)
