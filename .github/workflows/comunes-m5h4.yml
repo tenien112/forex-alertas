@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CTRADER_CLIENT_SECRET: ${{ secrets.CTRADER_CLIENT_SECRET }}
+      RADAR_FUENTE: yahoo        # radares y robots con Yahoo (como siempre)
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
