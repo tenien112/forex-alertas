@@ -2,9 +2,9 @@ ORO: M30+ H1. H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el p
 
 PLATA: M30+ H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-PLATINO: M30+ H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+PLATINO: M30. H1- H2- H4- H8- sin dirección clara. El sistema está en CORTO desde el 14/10 00:30 a 1669.20. Si no entraste, no entres ahora: espera al próximo aviso.
 
-PALADIO: M30+ H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+PALADIO: M30. H1. H2- H4- H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 PETRÓLEO WTI: M30- H1- H2- H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
