@@ -95,7 +95,7 @@ def precio_giro(d, mins, ahora):
     return sal
 
 # Días que se piden a cTrader para las velas de cada ejecución (como el histórico de Yahoo, para calcular bien el radar)
-DIAS_CT = {5: 21, 15: 60, 30: 60, 60: 300}
+DIAS_CT = {5: 10, 15: 30, 30: 60, 60: 240}
 
 def main():
     os.makedirs("velas", exist_ok=True)
