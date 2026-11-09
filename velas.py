@@ -4,6 +4,7 @@
 import os, json, time
 import numpy as np, pandas as pd, yfinance as yf
 from alertas_forex import indicadores_serie, BF, BS, BG, NL, EB, EC, INVERTIR   # el mismo cálculo de los radares
+from alertas_forex import FAV_INFO   # favoritos de BUSCAR VALOR que la app ha metido en los radares
 
 # Nombre del archivo = símbolo base de TradingView que usa la app (FX:EURUSD -> EURUSD, OANDA:XAUUSD -> XAUUSD...)
 MERCADOS = {
@@ -107,7 +108,9 @@ def main():
         print(f"cTrader: {len(ct)} mercados en {time.time() - t0:.0f} s")
     except Exception as ex:
         print("cTrader no disponible, uso Yahoo:", ex)
-    tickers = list(MERCADOS.values())
+    # Favoritos de la app: sus velas van a velas/<sim>.json igual que cuando se buscan
+    favs = {i["sim"]: i for i in FAV_INFO.values() if i["sim"] not in MERCADOS}
+    tickers = list(MERCADOS.values()) + [i["ticker"] for i in favs.values()]
     bruto = {}
     for intervalo, periodo, mins in DESCARGAS:
         for intento in range(2):
@@ -134,12 +137,28 @@ def main():
         if ct.get(nombre) and 60 in ct[nombre]:
             guarda(nombre, dict(ct[nombre]), ahora, "ctrader", f"velas_ct/{nombre}.json")
 
-def guarda(nombre, series, ahora, fuente, ruta):
+    if favs:
+        from buscar import simbolo_tv
+        for sim, i in favs.items():
+            try:
+                series = {}
+                for mins, df in bruto.items():
+                    try: d = limpia(df[i["ticker"]])
+                    except Exception: continue
+                    if len(d): series[mins] = d
+                if 60 not in series: print(f"Sin velas para el favorito {i['ticker']}"); continue
+                guarda(sim, series, ahora, "yahoo", f"velas/{sim}.json",
+                       {"ticker": i["ticker"], "nombre": i["nombre"], "tv": i["tv"] or simbolo_tv(i["ticker"])})
+            except Exception as ex:
+                print(f"Favorito {i['ticker']}: {ex}")
+
+def guarda(nombre, series, ahora, fuente, ruta, extra=None):
     if 60 in series:
         for m2, regla in AGRUPAR:
             series[m2] = series[60].resample(regla, origin="epoch", label="left", closed="left").agg(
                 {"Open": "first", "High": "max", "Low": "min", "Close": "last"}).dropna()
     sal = {"actualizado": ahora, "tf": {}, "radar": {}, "giro": {}, "fuente": fuente}
+    if extra: sal.update(extra)
     for mins, d in series.items():
         sal["tf"][str(mins)] = a_lista(d)
     # Desde la vela más antigua que se guarda (la de H8 suele ser la más lejana)

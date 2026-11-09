@@ -3,7 +3,7 @@ import numpy as np, pandas as pd, yfinance as yf, requests
 import fuente_ctrader   # precios de cTrader (cuenta demo de Spotware); Yahoo de reserva
 # Mismos mercados e indicadores que el RADAR CAMBIO TENDENCIAS, pero en M5, M30, H1 y H2
 # Solo se lanza a mano (desde la app BOLSA-LORENCITO): no manda avisos de cambio, solo el estado
-from alertas_forex import PARES, COMMODITIES, NOMBRES, TEMA, indicadores, indicadores_serie, estado, cerradas, rangos_recencia, marca
+from alertas_forex import PARES, COMMODITIES, NOMBRES, TEMA, indicadores, indicadores_serie, estado, cerradas, rangos_recencia, marca, ordena_resumen
 
 TFS = ["M5", "M30", "H1", "H2"]
 MINS = {"M5": 5, "M30": 30, "H1": 60, "H2": 120}
@@ -106,10 +106,7 @@ def main():
                                f"{'🟢' if g_now == 1 else '🔴'} {par} {'ALCISTA' if g_now == 1 else 'BAJISTA'}: los 4 indicadores "
                                f"{'positivos' if g_now == 1 else 'negativos'} en las 4 temporalidades (M5, M30, H1 y H2)"))
 
-    resumen.sort(key=lambda l: (l.split(":")[0] in COMMODITIES, l.split(":")[0]))
-    i = next((n for n, l in enumerate(resumen) if l.split(":")[0] in COMMODITIES), None)
-    if i is not None: resumen.insert(i, "— COMMODITIES —")
-    if i: resumen.insert(0, "— FOREX —")
+    ordena_resumen(resumen)
     print(f"Vela evaluada: {T:%d/%m %H:%M} UTC")
     print("\n".join(resumen))
     if "--avisos" not in sys.argv: avisos = []

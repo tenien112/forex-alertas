@@ -1,4 +1,4 @@
-import sys, json, datetime as dt
+import sys, os, re, json, unicodedata, datetime as dt
 import numpy as np, pandas as pd, yfinance as yf, requests
 import fuente_ctrader   # precios de cTrader (cuenta demo de Spotware); Yahoo de reserva
 
@@ -8,6 +8,56 @@ PARES = {"AUD/USD": "AUDUSD=X", "EUR/AUD": "EURAUD=X", "EUR/CAD": "EURCAD=X", "E
          "GBP/USD": "GBPUSD=X", "USD/CAD": "USDCAD=X", "USD/CHF": "USDCHF=X", "USD/CNH": "CNH=X", "USD/JPY": "USDJPY=X",
          "BITCOIN": "BTC-USD", "ORO": "GC=F", "PALADIO": "PA=F", "PETROLEO WTI": "CL=F", "PLATA": "SI=F", "PLATINO": "PL=F"}
 COMMODITIES = ['BITCOIN', 'ORO', 'PALADIO', 'PETROLEO WTI', 'PLATA', 'PLATINO']
+
+# FAVORITOS de BUSCAR VALOR (app BOLSA-LORENZITO): la app guarda sola su lista en favoritos.json cada vez que
+# marcas o quitas un favorito, y todos los radares de temporalidades los añaden aquí a sus mercados.
+FAVORITOS = []            # nombres (como salen en el radar)
+FAV_INFO = {}             # nombre -> {"ticker", "sim" (archivo de velas), "tv", "nombre"}
+MAX_FAVORITOS = 20
+
+def nombre_fav(t):
+    t = unicodedata.normalize("NFD", str(t or "")).encode("ascii", "ignore").decode().upper()
+    return re.sub(r"\s+", " ", re.sub(r"[:\[\]\n\r\t]", " ", t)).strip()[:20].strip()
+
+def _carga_favoritos():
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "favoritos.json"), encoding="utf-8") as f:
+            lista = json.load(f).get("lista", [])
+    except Exception:
+        return
+    ya = set(PARES.values()) | {"USDCNH=X"}
+    for x in lista:
+        try:
+            t = str(x.get("ticker") or "").strip()
+            par = nombre_fav(x.get("par") or x.get("nombre") or t)
+            if not t or t in ya or not par or par in PARES or not re.fullmatch(r"[A-Za-z0-9^=.\-&_]{1,20}", t): continue
+            sim = "ETHUSD" if t == "ETH-USD" else "B_" + re.sub(r"[^A-Za-z0-9]", "_", t).upper()
+            PARES[par] = t; ya.add(t); FAVORITOS.append(par)
+            FAV_INFO[par] = {"ticker": t, "sim": sim, "tv": str(x.get("tv") or ""), "nombre": str(x.get("nombre") or par)}
+            if len(FAVORITOS) >= MAX_FAVORITOS: break
+        except Exception as ex:
+            print("Favorito no válido:", x, ex)
+
+_carga_favoritos()
+
+def ordena_resumen(resumen):
+    # Forex por orden alfabético, después las commodities y al final los favoritos de la app (cada grupo con su título)
+    grupo = lambda l: 2 if l.split(":")[0] in FAVORITOS else 1 if l.split(":")[0] in COMMODITIES else 0
+    resumen.sort(key=lambda l: (grupo(l), l.split(":")[0]))
+    titulos = {0: "— FOREX —", 1: "— COMMODITIES —", 2: "— FAVORITOS —"}
+    varios = len({grupo(l) for l in resumen}) > 1
+    sal, ant = [], None
+    for l in resumen:
+        g = grupo(l)
+        if varios and g != ant: sal.append(titulos[g])
+        ant = g; sal.append(l)
+    # ntfy corta los mensajes de más de 4096 bytes: si no cabe, se quitan favoritos del final
+    quitados = 0
+    while len("\n".join(sal).encode("utf-8")) > 3800 and sal and grupo(sal[-1]) == 2:
+        sal.pop(); quitados += 1
+    if quitados: sal.append(f"(y {quitados} favoritos más que no caben)")
+    resumen[:] = sal
+    return resumen
 TFS = ["M30", "H1", "H2"]
 TEMA = "forex-lorenzito-7k3q9"
 ESTADO = "estado_forex.json"           # último estado de cada par (para no perder cambios)
@@ -92,8 +142,12 @@ def main():
     datos = {}
     for par in PARES:
         t = PARES[par]
-        m30 = yf.download(t, period="60d", interval="30m", progress=False, auto_adjust=False)
-        h1 = yf.download(t, period="730d", interval="1h", progress=False, auto_adjust=False)
+        try:
+            m30 = yf.download(t, period="60d", interval="30m", progress=False, auto_adjust=False)
+            h1 = yf.download(t, period="730d", interval="1h", progress=False, auto_adjust=False)
+        except Exception as ex:
+            if par not in FAVORITOS: raise
+            print(f"Error descargando {par}: {ex}"); continue
         for d in (m30, h1):
             if isinstance(d.columns, pd.MultiIndex): d.columns = d.columns.get_level_values(0)
         if len(m30) == 0 or len(h1) == 0:
@@ -182,11 +236,7 @@ def main():
                                f"{'positivos' if g_now==1 else 'negativos'} en las 3 temporalidades (M30, H1 y H2)"))
 
     # Forex por orden alfabético y después las commodities agrupadas (también por orden alfabético)
-    clave = lambda l: (l.split(":")[0] in COMMODITIES, l.split(":")[0])
-    resumen.sort(key=clave)
-    i = next((n for n, l in enumerate(resumen) if l.split(":")[0] in COMMODITIES), None)
-    if i is not None: resumen.insert(i, "— COMMODITIES —")
-    if i: resumen.insert(0, "— FOREX —")
+    ordena_resumen(resumen)
     print(f"Vela evaluada: {T:%d/%m %H:%M} UTC (comparada con {P:%H:%M})")
     print("\n".join(resumen))
     enviar = "--prueba" in sys.argv
