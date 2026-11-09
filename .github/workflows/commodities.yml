@@ -46,6 +46,8 @@ jobs:
       - name: Guardar velas para el gráfico de la app BOLSA
         if: github.event.inputs.prueba == 'true'
         continue-on-error: true
+        env:
+          CTRADER_CLIENT_SECRET: ${{ secrets.CTRADER_CLIENT_SECRET }}
         run: |
           python velas.py
           git config user.name "vigilante-velas"

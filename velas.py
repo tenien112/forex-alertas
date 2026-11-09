@@ -94,8 +94,19 @@ def precio_giro(d, mins, ahora):
         b = X[pos[0]]; X2, s2 = busca(b - paso, b, 401); sal["sube"] = float(X2[np.where(s2 == 1)[0][0]])
     return sal
 
+# Días que se piden a cTrader para las velas de cada ejecución (como el histórico de Yahoo, para calcular bien el radar)
+DIAS_CT = {5: 21, 15: 60, 30: 60, 60: 300}
+
 def main():
     os.makedirs("velas", exist_ok=True)
+    ct = {}
+    try:
+        import ctrader_velas
+        t0 = time.time()
+        ct = ctrader_velas.descarga(list(MERCADOS), DIAS_CT)
+        print(f"cTrader: {len(ct)} mercados en {time.time() - t0:.0f} s")
+    except Exception as ex:
+        print("cTrader no disponible, uso Yahoo:", ex)
     tickers = list(MERCADOS.values())
     bruto = {}
     for intervalo, periodo, mins in DESCARGAS:
@@ -108,9 +119,17 @@ def main():
                 print(f"Error descargando {intervalo}: {ex}"); time.sleep(10)
     ahora = int(time.time())
     for nombre, t in MERCADOS.items():
-        sal = {"actualizado": ahora, "tf": {}, "radar": {}, "giro": {}}
+        sal = {"actualizado": ahora, "tf": {}, "radar": {}, "giro": {}, "fuente": "yahoo"}
         series = {}
-        for mins, df in bruto.items():
+        if ct.get(nombre) and 60 in ct[nombre]:
+            sal["fuente"] = "ctrader"
+            for mins, d in ct[nombre].items():
+                series[mins] = d
+            d = ct[nombre][60]
+            for m2, regla in AGRUPAR:
+                series[m2] = d.resample(regla, origin="epoch", label="left", closed="left").agg(
+                    {"Open": "first", "High": "max", "Low": "min", "Close": "last"}).dropna()
+        for mins, df in ([] if sal["fuente"] == "ctrader" else bruto.items()):
             try:
                 d = limpia(df[t])
             except Exception:
@@ -139,7 +158,7 @@ def main():
             print(f"Sin velas para {nombre}"); continue
         with open(f"velas/{nombre}.json", "w") as f:
             json.dump(sal, f, separators=(",", ":"))
-        print(f"{nombre}: " + ", ".join(f"{k}={len(v)}/{len(sal['radar'].get(k, []))}" for k, v in sal["tf"].items()))
+        print(f"{nombre} [{sal['fuente']}]: " + ", ".join(f"{k}={len(v)}/{len(sal['radar'].get(k, []))}" for k, v in sal["tf"].items()))
 
 if __name__ == "__main__":
     main()

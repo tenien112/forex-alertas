@@ -49,11 +49,16 @@ def _pide_token(refresh):
         raise RuntimeError(f"cTrader no dio token: {d.get('errorCode')} {d.get('description')}")
     return {"access": d["accessToken"], "refresh": d["refreshToken"], "expira": int(time.time()) + int(d.get("expiresIn", 2628000))}
 
-def token():
-    """Devuelve un access token válido. Solo renueva si quedan menos de 5 días (cada renovación cambia el refresh token)."""
+def token(renovar=True):
+    """Devuelve un access token válido. Solo renueva si quedan menos de 5 días (cada renovación cambia el refresh token).
+    Con renovar=False (los radares) nunca renueva: así solo lo renueva un workflow (historial diario) y no se pisan."""
     t = _lee_token()
     if t and t["expira"] - time.time() > 5 * 86400:
         return t["access"], False
+    if not renovar:
+        if t and t["expira"] - time.time() > 600:
+            return t["access"], False
+        raise RuntimeError("Token de cTrader caducado: lo renueva el workflow del historial diario")
     refresh = (t or {}).get("refresh") or REFRESH_INICIAL
     if not refresh:
         raise RuntimeError("Falta el refresh token (secreto CTRADER_REFRESH_TOKEN)")

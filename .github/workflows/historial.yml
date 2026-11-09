@@ -1,0 +1,47 @@
+name: Historial largo de velas (cTrader, app BOLSA)
+
+on:
+  schedule:
+    - cron: "17 5 * * *"      # una vez al día
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ctrader-token
+  cancel-in-progress: false
+
+jobs:
+  historial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Descargar historial de cTrader
+        env:
+          CTRADER_CLIENT_SECRET: ${{ secrets.CTRADER_CLIENT_SECRET }}
+          CTRADER_REFRESH_TOKEN: ${{ secrets.CTRADER_REFRESH_TOKEN }}
+        run: python historial.py /tmp/historial
+      - name: Guardar token renovado (cifrado)
+        if: always()
+        run: |
+          git config user.name "historial-velas"
+          git config user.email "historial-velas@users.noreply.github.com"
+          git add ctrader_token.enc 2>/dev/null || exit 0
+          git commit -m "cTrader: token renovado (cifrado)" || exit 0
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs origin main && git push origin HEAD:main && break; sleep 3; done
+      - name: Subir a la rama historial (sustituye la anterior)
+        run: |
+          cd /tmp/historial
+          git init -q -b historial
+          git config user.name "historial-velas"
+          git config user.email "historial-velas@users.noreply.github.com"
+          git add .
+          git commit -qm "Historial de velas $(date -u +%F)"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" historial
