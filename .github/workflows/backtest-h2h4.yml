@@ -1,0 +1,19 @@
+name: Backtest H2/H4 medias cortas
+on:
+  push:
+    branches: [backtest-h2h4]
+permissions:
+  contents: write
+jobs:
+  bt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12", cache: pip}
+      - run: pip install -r requirements.txt
+      - run: python backtest_h2h4.py
+      - run: |
+          git config user.name bt; git config user.email bt@users.noreply.github.com
+          git add bt_h2h4_*.csv; git commit -m "Resultados backtest H2/H4 [skip ci]"; git push
