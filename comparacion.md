@@ -1,4 +1,4 @@
-# Radar con Yahoo frente a cTrader (09/11/2026 21:06)
+# Radar con Yahoo frente a cTrader (09/11/2026 21:17)
 
 Signo de cada temporalidad: Yahoo ≠ cTrader cuando no coinciden; entre paréntesis la hora del último cambio (Yahoo / cTrader) cuando difiere.
 
@@ -9,11 +9,11 @@ Signo de cada temporalidad: Yahoo ≠ cTrader cuando no coinciden; entre parént
 | EUR/CAD | + | + | + | . | . | . |
 | EUR/CHF | . | + | . | . | . | - |
 | EUR/CNH | + (09/11 11:15 / 09/11 11:05) | . (09/11 03:30 / 09/11 03:00) | . | . | . | . |
-| EUR/GBP | + | + | . | . | . | - (01/10 14:00 / 01/10 22:00) |
-| EUR/JPY | + ≠ . (09/11 21:05 / 09/11 20:55) | . (09/11 09:30 / 09/11 05:15) | . | . | . | . |
+| EUR/GBP | + | + | . | . | . | - |
+| EUR/JPY | + | . (09/11 09:30 / 09/11 05:15) | . | . | . | . |
 | EUR/USD | + (09/11 12:00 / 09/11 11:40) | . (09/11 04:30 / 09/11 03:30) | . | . | . | . |
 | GBP/AUD | - | . | . | + | + | + |
-| GBP/CAD | + | + | + (06/11 18:00 / 06/11 16:30) | + | + | + |
+| GBP/CAD | + | + | + | + | + | + |
 | GBP/CHF | . | + | . | . | . | . |
 | GBP/JPY | . | . | . | . | . | . |
 | GBP/USD | + | . | . (05/11 12:30 / 05/11 20:00) | . | . | . |
@@ -23,8 +23,8 @@ Signo de cada temporalidad: Yahoo ≠ cTrader cuando no coinciden; entre parént
 | USD/JPY | - | - | . | . | . | . |
 | BITCOIN | . | . | - | - | - | - |
 | ORO | + | + | + | + (09/11 20:00 / 09/11 17:00) | . | . |
-| PALADIO | . ≠ + (09/11 20:10 / 09/11 21:05) | . | . ≠ + (09/11 13:00 / 09/11 21:00) | . | . | . |
+| PALADIO | . ≠ + (09/11 20:10 / 09/11 21:05) | . ≠ + (09/11 08:30 / 09/11 21:15) | . ≠ + (09/11 13:00 / 09/11 21:00) | . | . | . |
 | PETROLEO WTI | - | - | - | - (09/11 07:00 / 04/11 15:00) | - (06/11 21:00 / 06/11 05:00) | . |
 | PLATA | + (09/11 19:40 / 09/11 19:50) | + | + | . | . | . |
 
-Mismo signo: 129 de 132 (98 %). Mismo signo y misma hora de cambio: 113 de 132 (86 %).
+Mismo signo: 129 de 132 (98 %). Mismo signo y misma hora de cambio: 115 de 132 (87 %).
