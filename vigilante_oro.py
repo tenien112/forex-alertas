@@ -17,6 +17,7 @@ que todavía no se hayan avisado. Solo guarda la hora del último aviso enviado
 """
 import sys, json, os
 import numpy as np, pandas as pd, yfinance as yf, requests
+import fuente_ctrader   # precios de cTrader (cuenta demo de Spotware); Yahoo de reserva
 
 MERCADOS = {"ORO": "GC=F", "PLATA": "SI=F", "BITCOIN": "BTC-USD", "PETRÓLEO WTI": "CL=F",
             "EUR/USD": "EURUSD=X", "EUR/GBP": "EURGBP=X", "EUR/JPY": "EURJPY=X",

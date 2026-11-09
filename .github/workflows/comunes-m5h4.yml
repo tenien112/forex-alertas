@@ -19,6 +19,8 @@ concurrency:
 jobs:
   vigilar:
     runs-on: ubuntu-latest
+    env:
+      CTRADER_CLIENT_SECRET: ${{ secrets.CTRADER_CLIENT_SECRET }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4

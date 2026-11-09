@@ -1,5 +1,6 @@
 import sys, json
 import numpy as np, pandas as pd, yfinance as yf, requests
+import fuente_ctrader   # precios de cTrader (cuenta demo de Spotware); Yahoo de reserva
 # Mismos mercados e indicadores que el RADAR CAMBIO TENDENCIAS, pero en M5, M30, H1, H2 y H4
 # Solo se lanza a mano (desde la app BOLSA-LORENCITO, botón COMUNES M5-H4): no manda avisos de cambio, solo el estado
 from alertas_forex import PARES, COMMODITIES, NOMBRES, TEMA, indicadores, indicadores_serie, estado, cerradas, rangos_recencia, marca

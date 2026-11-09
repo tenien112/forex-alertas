@@ -1,5 +1,6 @@
 import sys, json, datetime as dt
 import numpy as np, pandas as pd, yfinance as yf, requests
+import fuente_ctrader   # precios de cTrader (cuenta demo de Spotware); Yahoo de reserva
 
 # Forex por orden alfabético y después las commodities agrupadas (también alfabético)
 PARES = {"AUD/USD": "AUDUSD=X", "EUR/AUD": "EURAUD=X", "EUR/CAD": "EURCAD=X", "EUR/CHF": "EURCHF=X", "EUR/CNH": "EURCNH=X", "EUR/GBP": "EURGBP=X",

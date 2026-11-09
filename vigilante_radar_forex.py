@@ -10,6 +10,7 @@ Mismo sistema que el COMMODITIES RADAR, para divisas, con 5 temporalidades: M30,
 """
 import sys, json, os
 import numpy as np, pandas as pd, yfinance as yf, requests
+import fuente_ctrader   # precios de cTrader (cuenta demo de Spotware); Yahoo de reserva
 
 MERCADOS = {"EUR/USD": "EURUSD=X",
             "EUR/GBP": "EURGBP=X",

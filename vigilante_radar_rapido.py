@@ -1,5 +1,6 @@
 import sys, json
 import numpy as np, pandas as pd, yfinance as yf, requests
+import fuente_ctrader   # precios de cTrader (cuenta demo de Spotware); Yahoo de reserva
 # Mismos mercados e indicadores que el RADAR CAMBIO TENDENCIAS, pero en M5, M15, M30, H1, H2 y H4
 from alertas_forex import PARES, COMMODITIES, NOMBRES, TEMA, indicadores, indicadores_serie, estado, cerradas, rangos_recencia, marca
 
