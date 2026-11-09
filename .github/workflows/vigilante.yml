@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CTRADER_CLIENT_SECRET: ${{ secrets.CTRADER_CLIENT_SECRET }}
-      RADAR_FUENTE: yahoo        # radares y robots con Yahoo (como siempre)
+      RADAR_FUENTE: ctrader      # radares y robots con precios de cTrader; Yahoo solo de reserva si cTrader falla
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
