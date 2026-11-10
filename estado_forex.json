@@ -28,5 +28,7 @@
  "S&P 500": 0,
  "NASDAQ": 0,
  "DAX": 1,
- "DIA (SUPERMERCADOS D": 1
+ "DIA (SUPERMERCADOS D": 1,
+ "NVIDIA": -1,
+ "IBERDROLA": 1
 }
