@@ -9,7 +9,7 @@
  "EUR/CAD": 0,
  "AUD/USD": -1,
  "USD/CAD": 0,
- "GBP/AUD": 1,
+ "GBP/AUD": 0,
  "GBP/CAD": 0,
  "PETROLEO WTI": -1,
  "ORO": 0,
@@ -31,5 +31,5 @@
  "DIA (SUPERMERCADOS D": 1,
  "NVIDIA": -1,
  "IBERDROLA": 1,
- "APPLE": 1
+ "APPLE": 0
 }
