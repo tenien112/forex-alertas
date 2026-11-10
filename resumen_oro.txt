@@ -2,7 +2,7 @@ ORO: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 PLATA: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-BITCOIN: baja ⬇️. El sistema está en CORTO desde el 08/11 23:00 a 74024.99. Si no entraste, no entres ahora: espera al próximo aviso.
+BITCOIN: baja ⬇️. El sistema está en CORTO desde el 10/11 06:00 a 74742.85. Si no entraste, no entres ahora: espera al próximo aviso.
 
 PETRÓLEO WTI: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
@@ -12,7 +12,7 @@ EUR/GBP: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 EUR/JPY: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-GBP/USD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+GBP/USD: sube ⬆️. El sistema está en LARGO desde el 10/11 06:00 a 1.34484. Si no entraste, no entres ahora: espera al próximo aviso.
 
 USD/CNH: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
@@ -30,7 +30,7 @@ EUR/CAD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 EUR/AUD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-GBP/CAD: sube ⬆️. El sistema está en LARGO desde el 09/11 13:00 a 1.88955. Si no entraste, no entres ahora: espera al próximo aviso.
+GBP/CAD: sube ⬆️. El sistema está en LARGO desde el 09/11 13:00 a 1.88965. Si no entraste, no entres ahora: espera al próximo aviso.
 
 GBP/AUD: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
