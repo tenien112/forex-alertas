@@ -5,7 +5,7 @@ import pandas as pd
 import ctrader_api as ct
 
 # Nombre en la app -> símbolo en cTrader (el platino XPTUSD no está: sigue con Yahoo)
-MAPA = {n: n for n in ["AUDUSD", "EURAUD", "EURCAD", "EURCHF", "EURCNH", "EURGBP", "EURJPY", "EURUSD", "GBPAUD",
+MAPA = {n: n for n in ["AUDUSD", "CHFJPY", "EURAUD", "EURCAD", "EURCHF", "EURCNH", "EURGBP", "EURJPY", "EURUSD", "GBPAUD",
                        "GBPCAD", "GBPCHF", "GBPJPY", "GBPUSD", "USDCAD", "USDCHF", "USDCNH", "USDJPY",
                        "XAUUSD", "XAGUSD", "XPDUSD", "BTCUSD", "ETHUSD"]}
 MAPA["USOIL"] = "XTIUSD"

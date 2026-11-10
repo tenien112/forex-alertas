@@ -8,7 +8,7 @@ from alertas_forex import FAV_INFO   # favoritos de BUSCAR VALOR que la app ha m
 
 # Nombre del archivo = símbolo base de TradingView que usa la app (FX:EURUSD -> EURUSD, OANDA:XAUUSD -> XAUUSD...)
 MERCADOS = {
-    "AUDUSD": "AUDUSD=X", "EURAUD": "EURAUD=X", "EURCAD": "EURCAD=X", "EURCHF": "EURCHF=X", "EURCNH": "EURCNH=X",
+    "AUDUSD": "AUDUSD=X", "CHFJPY": "CHFJPY=X", "EURAUD": "EURAUD=X", "EURCAD": "EURCAD=X", "EURCHF": "EURCHF=X", "EURCNH": "EURCNH=X",
     "EURGBP": "EURGBP=X", "EURJPY": "EURJPY=X", "EURUSD": "EURUSD=X", "GBPAUD": "GBPAUD=X", "GBPCAD": "GBPCAD=X",
     "GBPCHF": "GBPCHF=X", "GBPJPY": "GBPJPY=X", "GBPUSD": "GBPUSD=X", "USDCAD": "USDCAD=X", "USDCHF": "USDCHF=X",
     "USDCNH": "CNH=X", "USDJPY": "USDJPY=X",
