@@ -8,10 +8,10 @@
  "EUR/JPY": 0,
  "EUR/USD": 0,
  "GBP/AUD": 0,
- "GBP/CAD": 1,
+ "GBP/CAD": 0,
  "GBP/CHF": 0,
  "GBP/JPY": 0,
- "GBP/USD": 0,
+ "GBP/USD": 1,
  "USD/CAD": 0,
  "USD/CHF": 0,
  "USD/CNH": 0,
@@ -21,5 +21,12 @@
  "PALADIO": 0,
  "PETROLEO WTI": -1,
  "PLATA": 0,
- "PLATINO": 0
+ "PLATINO": 0,
+ "IBEX 35": 0,
+ "SANTANDER": 0,
+ "INDITEX": 1,
+ "S&P 500": 0,
+ "NASDAQ": 0,
+ "DAX": 1,
+ "DIA (SUPERMERCADOS D": 1
 }
