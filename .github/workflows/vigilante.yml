@@ -20,6 +20,9 @@ concurrency:
 
 jobs:
   vigilar:
+    # 11/11/2026: solo cuando lo lanza Lorenzo desde la app (prueba=true).
+    # Si lo lanza el despertador de cron-job.org, el trabajo se salta y no gasta minutos.
+    if: github.event.inputs.prueba == 'true'
     runs-on: ubuntu-latest
     env:
       CTRADER_CLIENT_SECRET: ${{ secrets.CTRADER_CLIENT_SECRET }}
