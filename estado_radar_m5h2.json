@@ -1,6 +1,6 @@
 {
- "AUD/USD": -1,
- "EUR/AUD": 1,
+ "AUD/USD": 0,
+ "EUR/AUD": 0,
  "EUR/CAD": 0,
  "EUR/CHF": 0,
  "EUR/CNH": 0,
@@ -16,7 +16,7 @@
  "USD/CHF": 0,
  "USD/CNH": 0,
  "USD/JPY": 1,
- "BITCOIN": -1,
+ "BITCOIN": 0,
  "ORO": 0,
  "PALADIO": 0,
  "PETROLEO WTI": 0,
@@ -30,5 +30,6 @@
  "DAX": 0,
  "DIA (SUPERMERCADOS D": 1,
  "APPLE": 0,
- "NVIDIA": -1
+ "NVIDIA": 0,
+ "CHF/JPY": 0
 }
