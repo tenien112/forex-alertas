@@ -4,9 +4,9 @@ name: Vigilante RADAR CAMBIO TENDENCIAS
 # (juntos para gastar la mitad de minutos gratuitos de GitHub).
 on:
   schedule:
-    # Cada 30 minutos (minutos 3 y 33 UTC), de domingo a viernes UTC.
+    # Cada hora (minuto 3 UTC), de domingo a viernes UTC.
     # El FOREX solo se vigila de lunes a viernes (hora de Madrid); el oro abre el domingo noche.
-    - cron: "3,33 * * * 0-5"
+    - cron: "3 * * * 0-5"
   workflow_dispatch:
     inputs:
       prueba:
