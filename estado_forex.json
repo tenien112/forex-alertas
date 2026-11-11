@@ -1,5 +1,5 @@
 {
- "EUR/USD": 0,
+ "EUR/USD": -1,
  "EUR/GBP": 0,
  "EUR/JPY": 0,
  "GBP/USD": 0,
@@ -19,7 +19,7 @@
  "GBP/CHF": 0,
  "BITCOIN": -1,
  "PLATA": 0,
- "EUR/CNH": 0,
+ "EUR/CNH": -1,
  "PALADIO": 0,
  "PLATINO": 0,
  "IBEX 35": 0,
