@@ -3,10 +3,7 @@ name: Vigilante RADAR CAMBIO TENDENCIAS
 # Un solo trabajo cada 30 minutos que revisa el FOREX y además el ORO y la PLATA
 # (juntos para gastar la mitad de minutos gratuitos de GitHub).
 on:
-  schedule:
-    # Cada hora (minuto 3 UTC), de domingo a viernes UTC.
-    # El FOREX solo se vigila de lunes a viernes (hora de Madrid); el oro abre el domingo noche.
-    - cron: "3 * * * 0-5"
+  # Sin horario automático desde el 11/11/2026: los radares solo se lanzan a mano (app BOLSA-LORENZITO)
   workflow_dispatch:
     inputs:
       prueba:
