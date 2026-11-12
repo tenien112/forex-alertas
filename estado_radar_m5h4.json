@@ -16,7 +16,7 @@
  "USD/CHF": 0,
  "USD/CNH": 0,
  "USD/JPY": 0,
- "BITCOIN": -1,
+ "BITCOIN": 0,
  "ORO": 0,
  "PALADIO": 0,
  "PETROLEO WTI": 0,
@@ -25,9 +25,10 @@
  "IBEX 35": 0,
  "SANTANDER": 0,
  "INDITEX": 0,
- "APPLE": 0,
+ "APPLE": 1,
  "NVIDIA": 0,
  "S&P 500": 0,
  "NASDAQ": 0,
- "DAX": 0
+ "DAX": 1,
+ "CHF/JPY": 0
 }
