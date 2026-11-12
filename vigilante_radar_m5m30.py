@@ -1,0 +1,121 @@
+import sys, json
+import numpy as np, pandas as pd, yfinance as yf, requests
+import fuente_ctrader   # precios de cTrader (cuenta demo de Spotware); Yahoo de reserva
+# Mismos mercados e indicadores que el RADAR CAMBIO TENDENCIAS, pero en M5, M15 y M30
+# Solo se lanza a mano (desde la app BOLSA-LORENCITO): no manda avisos de cambio, solo el estado
+from alertas_forex import PARES, COMMODITIES, NOMBRES, TEMA, indicadores, indicadores_serie, estado, cerradas, rangos_recencia, marca, ordena_resumen
+
+TFS = ["M5", "M15", "M30"]
+MINS = {"M5": 5, "M15": 15, "M30": 30}
+ESTADO = "estado_radar_m5m30.json"
+NOMBRE = "VIGILANTE RADAR M5-M15-M30"
+
+def signo(e): return "+" if e == 1 else "-" if e == -1 else "."
+
+def descargar_datos():
+    datos = {}
+    for par, t in PARES.items():
+        try:
+            m5 = yf.download(t, period="60d", interval="5m", progress=False, auto_adjust=False)
+            m15 = yf.download(t, period="60d", interval="15m", progress=False, auto_adjust=False)
+            m30 = yf.download(t, period="60d", interval="30m", progress=False, auto_adjust=False)
+        except Exception as ex:
+            print(f"Error descargando {par}: {ex}"); continue
+        ds = {}
+        for tf, d in zip(["M5", "M15", "M30"], (m5, m15, m30)):
+            if isinstance(d.columns, pd.MultiIndex): d.columns = d.columns.get_level_values(0)
+            if len(d) == 0: break
+            ds[tf] = d.tz_convert("UTC")["Close"].dropna()
+        if len(ds) < len(TFS):
+            print(f"Sin datos para {par}, se omite"); continue
+        datos[par] = ds
+
+    return datos
+
+def main():
+    ahora = pd.Timestamp.now(tz="UTC")
+    madrid = ahora.tz_convert("Europe/Madrid")
+    if madrid.weekday() >= 5 and "--prueba" not in sys.argv:
+        print("Fin de semana (hora de Madrid): no se vigila."); return
+    T = ahora.floor("5min")                 # último cierre de M5
+    P = T - pd.Timedelta(minutes=30)        # situación en la revisión anterior (cada 30 min)
+    datos = descargar_datos()
+
+    def desde_cuando(par, combo, hasta):
+        # Busca la vela M5 desde la que el signo de todas las temporalidades es el mismo que ahora
+        estados = {}
+        for tf in TFS:
+            s = datos[par][tf]
+            st = pd.Series(indicadores_serie(s.values), index=s.index + pd.Timedelta(minutes=MINS[tf]))
+            estados[tf] = st[st.index <= hasta]
+        cierres = estados[TFS[0]].index
+        if len(cierres) == 0: return None
+        gs = np.ones(len(cierres), dtype=bool); vals = {}
+        for tf in TFS:
+            st = estados[tf]
+            pos = st.index.searchsorted(cierres, side="right") - 1
+            vals[tf] = np.where(pos >= 0, st.values[np.clip(pos, 0, None)], 0)
+            gs &= (vals[tf] == combo[tf])
+        if not gs[-1]: return None
+        malos = np.where(~gs)[0]
+        rangos = rangos_recencia(vals, combo, TFS)
+        if len(malos) == 0: return ("antes", cierres[0], rangos)
+        i = malos[-1]
+        return ("", cierres[i + 1], rangos)
+
+    try:
+        with open(ESTADO) as f: guardado = json.load(f)
+    except Exception:
+        guardado = {}
+    nuevo = dict(guardado)
+    avisos = []; resumen = []
+    for par in PARES:
+        if par not in datos: continue
+        ind_now = {tf: indicadores(cerradas(datos[par][tf], MINS[tf], T).values) for tf in TFS}
+        ind_prev = {tf: indicadores(cerradas(datos[par][tf], MINS[tf], P).values) for tf in TFS}
+        e_now = {tf: estado(v) for tf, v in ind_now.items()}
+        e_prev = {tf: estado(v) for tf, v in ind_prev.items()}
+        g = lambda e: 1 if all(x == 1 for x in e.values()) else -1 if all(x == -1 for x in e.values()) else 0
+        g_now, g_prev = g(e_now), g(e_prev)
+        if par in guardado: g_prev = guardado[par]
+        nuevo[par] = g_now
+        texto = ""; cambiadas = {}
+        try:
+            d = desde_cuando(par, e_now, T)
+            if d:
+                cambiadas = d[2]
+                texto = (" antes" if d[0] else "") + f" {d[1].tz_convert('Europe/Madrid'):%d/%m %H:%M}"
+        except Exception as ex:
+            print(f"No se pudo calcular desde cuándo para {par}: {ex}")
+        resumen.append(f"{par}: " + " ".join(marca(f"{tf}{signo(e_now[tf])}", cambiadas.get(tf, 0)) for tf in TFS)
+                       + (" ALCISTA" if g_now == 1 else " BAJISTA" if g_now == -1 else "") + texto)
+        if g_now != g_prev:
+            if g_prev != 0:
+                fallos = []
+                for tf in TFS:
+                    v = ind_now[tf]
+                    malos = [NOMBRES[i] for i in range(4) if not (v[i] > 0 if g_prev == 1 else v[i] < 0)]
+                    if malos: fallos.append(f"{tf}: {', '.join(malos)}")
+                avisos.append(("FIN " + ("ALCISTA " if g_prev == 1 else "BAJISTA ") + par,
+                               f"⚠️ {par} deja de estar {'ALCISTA' if g_prev == 1 else 'BAJISTA'}. Falla: " + " | ".join(fallos)))
+            if g_now != 0:
+                avisos.append((("ALCISTA " if g_now == 1 else "BAJISTA ") + par,
+                               f"{'🟢' if g_now == 1 else '🔴'} {par} {'ALCISTA' if g_now == 1 else 'BAJISTA'}: los 4 indicadores "
+                               f"{'positivos' if g_now == 1 else 'negativos'} en las 3 temporalidades (M5, M15 y M30)"))
+
+    ordena_resumen(resumen)
+    print(f"Vela evaluada: {T:%d/%m %H:%M} UTC")
+    print("\n".join(resumen))
+    if "--avisos" not in sys.argv: avisos = []
+    for titulo, msg in avisos:
+        print("AVISO:", titulo, "-", msg)
+        requests.post(f"https://ntfy.sh/{TEMA}", data=msg.encode("utf-8"),
+                      headers={"Title": f"{NOMBRE}: {titulo}".encode("utf-8"), "Priority": "high", "Tags": "chart_with_upwards_trend"}, timeout=15)
+    if "--prueba" in sys.argv:
+        requests.post(f"https://ntfy.sh/{TEMA}", data=("Prueba OK. Estado actual:\n" + "\n".join(resumen)).encode("utf-8"),
+                      headers={"Title": f"{NOMBRE}: funcionando".encode("utf-8"), "Priority": "default"}, timeout=15)
+    if not avisos: print("Sin cambios: no se envía aviso.")
+    with open(ESTADO, "w") as f: json.dump(nuevo, f, indent=1, ensure_ascii=False)
+
+if __name__ == "__main__":
+    main()
