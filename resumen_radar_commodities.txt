@@ -1,12 +1,12 @@
-ORO: M30. H1. H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+ORO: M30- H1- H2- H4- H8- BAJISTA ⬇️. El sistema está en CORTO desde el 12/11 09:00 a 3964.95. Si no entraste, no entres ahora: espera al próximo aviso.
 
-PLATA: M30. H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+PLATA: M30- H1- H2- H4- H8- BAJISTA ⬇️. El sistema está en CORTO desde el 12/11 15:00 a 50.190. Si no entraste, no entres ahora: espera al próximo aviso.
 
-PLATINO: M30. H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+PLATINO: M30. H1. H2. H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 PALADIO: M30. H1. H2. H4. H8- sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
-PETRÓLEO WTI: M30- H1- H2- H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+PETRÓLEO WTI: M30. H1. H2- H4. H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 BITCOIN: M30- H1- H2- H4- H8. sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
