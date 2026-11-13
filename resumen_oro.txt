@@ -18,7 +18,7 @@ USD/CNH: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
 
 EUR/CNH: baja ⬇️. El sistema está en CORTO desde el 11/11 17:00 a 7.40387. Si no entraste, no entres ahora: espera al próximo aviso.
 
-USD/CHF: sin dirección clara. No hay nada abierto. Espera el próximo aviso.
+USD/CHF: sube ⬆️. El sistema está en LARGO desde el 13/11 01:00 a 0.83600. Si no entraste, no entres ahora: espera al próximo aviso.
 
 GBP/CHF: sube ⬆️. El sistema está en LARGO desde el 12/11 17:00 a 1.10490. Si no entraste, no entres ahora: espera al próximo aviso.
 
