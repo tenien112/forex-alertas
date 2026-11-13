@@ -1,5 +1,5 @@
 {
- "AUD/USD": -1,
+ "AUD/USD": 0,
  "EUR/AUD": 0,
  "EUR/CAD": 0,
  "EUR/CHF": 0,
@@ -29,5 +29,6 @@
  "NVIDIA": 0,
  "S&P 500": 0,
  "NASDAQ": 0,
- "DAX": 0
+ "DAX": 0,
+ "CHF/JPY": 0
 }
